@@ -1,0 +1,61 @@
+﻿@{
+    ViewData["Title"] = "Directors";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Directors</h2>
+
+<p>
+    <a class="btn btn-primary" href="/Director/Create">Create New Director</a>
+</p>
+
+<link href="https://unpkg.com/tabulator-tables@5.4.3/dist/css/tabulator.min.css" rel="stylesheet" />
+<script src="https://unpkg.com/tabulator-tables@5.4.3/dist/js/tabulator.min.js"></script>
+
+<div id="director-table"></div>
+
+<script>
+    var table = new Tabulator("#director-table", {
+        height: 500,
+        layout: "fitColumns",
+        ajaxURL: "/Director/GetDirectors", 
+        pagination: "remote",
+        paginationSize: 10,
+        ajaxConfig: "GET",
+        columns: [
+            { title: "ID", field: "directorId", visible: false },
+            { title: "Name", field: "name", editor: "input" },
+            { title: "Biography", field: "biography", editor: "input" },
+            { title: "Date of Birth", field: "dateOfBirth", editor: "input" },
+            {
+              title: "Image",
+              field: "imageUrl",
+              formatter: function(cell, formatterParams) {
+                  const url = cell.getValue();
+                  return `<img src="${url}" alt="Director Image" style="height: 60px; border-radius: 5px;" />`;
+              }
+            },
+            {
+                title: "Actions",
+                formatter: "buttonCross",
+                width: 100,
+                align: "center",
+                cellClick: function (e, cell) {
+                    var directorId = cell.getRow().getData().directorId;
+                    fetch("/Director/DeleteConfirmed/" + directorId, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" }
+                    }).then(() => table.replaceData());
+                }
+            }
+        ],
+        cellEdited: function (cell) {
+            let rowData = cell.getRow().getData();
+            fetch("/Director/Edit/" + rowData.directorId, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(rowData)
+            });
+        }
+    });
+</script>

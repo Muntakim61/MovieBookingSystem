@@ -8,13 +8,13 @@ namespace MovieBookingSystem.Models
 
         [Required]
         public string Name { get; set; }
-
+        [Required]
         public string Biography { get; set; }
 
         public DateTime DateOfBirth { get; set; }
 
         public string ImageUrl { get; set; }
-
+        [Required]
         public ICollection<Movie> Movies { get; set; }
     }
 }
