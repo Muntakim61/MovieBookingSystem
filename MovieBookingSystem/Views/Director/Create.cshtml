@@ -4,39 +4,69 @@
     ViewData["Title"] = "Add New Director";
 }
 
-<h2>@ViewData["Title"]</h2>
+<h2 class="mb-4 text-primary">@ViewData["Title"]</h2>
 
-<form asp-action="Create" method="post">
-    <div class="form-group">
-        <label asp-for="Name"></label>
-        <input asp-for="Name" class="form-control" />
+<form asp-action="Create" method="post" class="needs-validation" novalidate>
+    <div class="mb-3">
+        <label asp-for="Name" class="form-label fw-semibold"></label>
+        <input asp-for="Name" class="form-control" placeholder="Enter director's name" required />
+        <div class="invalid-feedback">
+            Please provide a name.
+        </div>
         <span asp-validation-for="Name" class="text-danger"></span>
     </div>
 
-    <div class="form-group">
-        <label asp-for="Biography"></label>
-        <textarea asp-for="Biography" class="form-control"></textarea>
+    <div class="mb-3">
+        <label asp-for="Biography" class="form-label fw-semibold"></label>
+        <textarea asp-for="Biography" class="form-control" rows="4" placeholder="Brief biography..." required></textarea>
+        <div class="invalid-feedback">
+            Biography is required.
+        </div>
         <span asp-validation-for="Biography" class="text-danger"></span>
     </div>
 
-    <div class="form-group">
-        <label asp-for="DateOfBirth"></label>
-        <input asp-for="DateOfBirth" class="form-control" type="date" />
+    <div class="mb-3">
+        <label asp-for="DateOfBirth" class="form-label fw-semibold"></label>
+        <input asp-for="DateOfBirth" type="date" class="form-control" required />
+        <div class="invalid-feedback">
+            Please select a valid date.
+        </div>
         <span asp-validation-for="DateOfBirth" class="text-danger"></span>
     </div>
 
-    <div class="form-group">
-        <label asp-for="ImageUrl"></label>
-        <input asp-for="ImageUrl" class="form-control" />
+    <div class="mb-4">
+        <label asp-for="ImageUrl" class="form-label fw-semibold"></label>
+        <input asp-for="ImageUrl" class="form-control" placeholder="https://example.com/image.jpg" />
+        <small class="form-text text-muted">Optional: Provide a URL to the director's image</small>
         <span asp-validation-for="ImageUrl" class="text-danger"></span>
     </div>
 
-    <button type="submit" class="btn btn-primary mt-4">Add Director</button>
-    <a asp-action="Index" class="btn btn-secondary mt-4">Cancel</a>
+    <div class="d-flex gap-3">
+        <button type="submit" class="btn btn-primary px-4">Add Director</button>
+        <a asp-action="Index" class="btn btn-outline-secondary px-4">Cancel</a>
+    </div>
 </form>
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+    <script>
+        (() => {
+            'use strict'
+            const forms = document.querySelectorAll('.needs-validation')
+            Array.from(forms).forEach(form => {
+                form.addEventListener('submit', event => {
+                    if (!form.checkValidity()) {
+                        event.preventDefault()
+                        event.stopPropagation()
+                    }
+                    form.classList.add('was-validated')
+                }, false)
+            })
+        })();
+
+        @if (TempData["ConsoleMessage"] != null)
+        {
+            <text>console.log("@TempData["ConsoleMessage"]");</text>
+        }
+    </script>
 }

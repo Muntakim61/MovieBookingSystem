@@ -17,11 +17,11 @@ namespace MovieBookingSystem.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            // Composite primary key for join table
+            
             modelBuilder.Entity<MovieActor>()
                 .HasKey(ma => new { ma.MovieId, ma.ActorId });
 
-            // Configure many-to-many relationship
+            
             modelBuilder.Entity<MovieActor>()
                 .HasOne(ma => ma.Movie)
                 .WithMany(m => m.MovieActors)

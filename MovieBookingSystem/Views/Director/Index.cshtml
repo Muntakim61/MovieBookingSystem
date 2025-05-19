@@ -35,19 +35,30 @@
                   return `<img src="${url}" alt="Director Image" style="height: 60px; border-radius: 5px;" />`;
               }
             },
-            {
+             {
                 title: "Actions",
-                formatter: "buttonCross",
-                width: 100,
-                align: "center",
-                cellClick: function (e, cell) {
+                formatter: function(cell, formatterParams) {
+                    var data = cell.getRow().getData();
+                   
+                    return `
+                        <button class="btn btn-sm btn-warning me-1 edit-btn" data-id="${data.directorId}">Edit</button>
+                        <button class="btn btn-sm btn-danger delete-btn" data-id="${data.directorId}">Delete</button>
+                    `;
+                },
+                width: 180,
+                hozAlign: "center",
+                cellClick: function(e, cell) {
+                    var target = e.target;
                     var directorId = cell.getRow().getData().directorId;
-                    fetch("/Director/DeleteConfirmed/" + directorId, {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" }
-                    }).then(() => table.replaceData());
+
+                    if (target.classList.contains('edit-btn')) {
+                        window.location.href = '/Director/Edit/' + directorId;
+                    } else if (target.classList.contains('delete-btn')) {
+                        window.location.href = '/Director/Delete/' + directorId;
+                    }
                 }
             }
+
         ],
         cellEdited: function (cell) {
             let rowData = cell.getRow().getData();

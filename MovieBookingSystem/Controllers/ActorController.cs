@@ -16,7 +16,7 @@ namespace MovieBookingSystem.Controllers
             _context = context;
         }
 
-        // GET: Actor
+        
         public async Task<IActionResult> Index()
         {
             return View(await _context.Actors.ToListAsync());
@@ -37,7 +37,7 @@ namespace MovieBookingSystem.Controllers
             return Json(actors);
         }
 
-        // GET: Actor/Details/5
+        
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null) return NotFound();
@@ -48,13 +48,13 @@ namespace MovieBookingSystem.Controllers
             return View(actor);
         }
 
-        // GET: Actor/Create
+        
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Actor/Create
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Name,Biography,DateOfBirth,ImageUrl")] Actor actor)
@@ -63,83 +63,56 @@ namespace MovieBookingSystem.Controllers
 
             if (!ModelState.IsValid)
             {
-                TempData["ConsoleMessage"]="ModelState is invalid.";
+                TempData["ConsoleMessage"] = "ModelState is invalid.";
                 var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage);
-                foreach (var error in errors)
-                {
-                    Console.WriteLine($"Validation Error: {error}");
-                }
+                TempData["ValidationErrors"] = string.Join("; ", errors);
                 return View(actor);
             }
 
-            Console.WriteLine("ModelState is valid. Adding actor to context.");
+            TempData["ConsoleMessage"] = "ModelState is valid. Adding actor to context.";
             _context.Add(actor);
 
-            Console.WriteLine("Saving changes to database.");
+            TempData["ConsoleMessage"] = "Saving changes to database.";
             await _context.SaveChangesAsync();
 
-            Console.WriteLine("Actor saved successfully. Redirecting to Index.");
+            TempData["ConsoleMessage"] = "Actor saved successfully. Redirecting to Index.";
             return RedirectToAction(nameof(Index));
         }
 
-
-        // GET: Actor/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null) return NotFound();
-
-            var actor = await _context.Actors.FindAsync(id);
-            if (actor == null) return NotFound();
-
-            return View(actor);
-        }
-
-        // POST: Actor/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ActorId,Name,Biography,DateOfBirth,ImageUrl")] Actor actor)
-        {
-            if (id != actor.ActorId) return NotFound();
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(actor);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!_context.Actors.Any(e => e.ActorId == id))
-                        return NotFound();
-                    else
-                        throw;
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(actor);
-        }
-
-        // GET: Actor/Delete/5
+      
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null) return NotFound();
+            if (id == null)
+                return NotFound();
 
-            var actor = await _context.Actors.FirstOrDefaultAsync(m => m.ActorId == id);
-            if (actor == null) return NotFound();
+            var actor = await _context.Actors
+                .FirstOrDefaultAsync(a => a.ActorId == id);
+
+            if (actor == null)
+                return NotFound();
 
             return View(actor);
         }
 
-        // POST: Actor/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var actor = await _context.Actors.FindAsync(id);
+            var actor = await _context.Actors
+                .Include(a => a.MovieActors)
+                .FirstOrDefaultAsync(a => a.ActorId == id);
+
+            if (actor == null)
+                return NotFound();
+
+            
+            _context.MovieActors.RemoveRange(actor.MovieActors);
+
             _context.Actors.Remove(actor);
             await _context.SaveChangesAsync();
+
             return RedirectToAction(nameof(Index));
         }
+
     }
 }

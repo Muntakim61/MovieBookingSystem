@@ -17,7 +17,7 @@ namespace MovieBookingSystem.Controllers
             _context = context;
         }
 
-        // GET: Director
+        
         public async Task<IActionResult> Index()
         {
             return View(await _context.Directors.ToListAsync());
@@ -38,7 +38,7 @@ namespace MovieBookingSystem.Controllers
             return Json(directors);
         }
 
-        // GET: Director/Details/5
+       
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null) return NotFound();
@@ -49,82 +49,33 @@ namespace MovieBookingSystem.Controllers
             return View(director);
         }
 
-        // GET: Director/Create
+        
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Director/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("DirectorId,Name,Biography,DateOfBirth,ImageUrl")] Director director)
+        public async Task<IActionResult> Create([Bind("Name,Biography,DateOfBirth,ImageUrl")] Director director)
         {
-            if (ModelState.IsValid)
+            TempData["ConsoleMessage"] = "Entered Create POST action.";
+
+            if (!ModelState.IsValid)
             {
-                _context.Add(director);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                TempData["ConsoleMessage"] = "ModelState is invalid.";
+                var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage);
+                TempData["ValidationErrors"] = string.Join("; ", errors);
+                return View(director);
             }
-            return View(director);
-        }
 
-        // GET: Director/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null) return NotFound();
+            TempData["ConsoleMessage"] = "ModelState is valid. Adding director to context.";
+            _context.Add(director);
 
-            var director = await _context.Directors.FindAsync(id);
-            if (director == null) return NotFound();
-
-            return View(director);
-        }
-
-        // POST: Director/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("DirectorId,Name,Biography,DateOfBirth,ImageUrl")] Director director)
-        {
-            if (id != director.DirectorId) return NotFound();
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(director);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!_context.Directors.Any(e => e.DirectorId == id))
-                        return NotFound();
-                    else
-                        throw;
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(director);
-        }
-
-        // GET: Director/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null) return NotFound();
-
-            var director = await _context.Directors.FirstOrDefaultAsync(m => m.DirectorId == id);
-            if (director == null) return NotFound();
-
-            return View(director);
-        }
-
-        // POST: Director/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var director = await _context.Directors.FindAsync(id);
-            _context.Directors.Remove(director);
+            TempData["ConsoleMessage"] = "Saving changes to database.";
             await _context.SaveChangesAsync();
+
+            TempData["ConsoleMessage"] = "Director saved successfully. Redirecting to Index.";
             return RedirectToAction(nameof(Index));
         }
     }

@@ -20,7 +20,6 @@ namespace MovieBookingSystem.Controllers
             return View();
         }
 
-        // ✅ GET: for Tabulator fetch (read)
         [HttpGet]
         public async Task<IActionResult> GetMovies()
         {
@@ -45,7 +44,7 @@ namespace MovieBookingSystem.Controllers
             return Json(movieList);
         }
 
-        // ✅ POST: Create or Update
+        
         [HttpPost]
         public async Task<IActionResult> SaveMovie([FromBody] Movie movie)
         {
@@ -62,7 +61,7 @@ namespace MovieBookingSystem.Controllers
             return Json(new { success = true });
         }
 
-        // ✅ DELETE
+        
         [HttpPost]
         public async Task<IActionResult> DeleteMovie([FromBody] int id)
         {
@@ -127,7 +126,7 @@ namespace MovieBookingSystem.Controllers
         {
             if (!ModelState.IsValid)
             {
-                // Reload dropdowns
+                
                 vm.Directors = _context.Directors.Select(d => new SelectListItem { Value = d.DirectorId.ToString(), Text = d.Name }).ToList();
                 vm.Actors = _context.Actors.Select(a => new SelectListItem { Value = a.ActorId.ToString(), Text = a.Name }).ToList();
                 return View(vm);
@@ -143,7 +142,7 @@ namespace MovieBookingSystem.Controllers
             movie.Price = vm.Price;
             movie.DirectorId = vm.SelectedDirectorId;
 
-            // Update many-to-many actors
+            
             movie.MovieActors.Clear();
             foreach (var actorId in vm.SelectedActorIds)
             {

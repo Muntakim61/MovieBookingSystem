@@ -14,7 +14,7 @@ namespace MovieBookingSystem.Models
         public DateTime DateOfBirth { get; set; }
 
         public string ImageUrl { get; set; }
-        [Required]
-        public ICollection<Movie> Movies { get; set; }
+        public ICollection<Movie> Movies { get; set; } = new List<Movie>();
+
     }
 }
