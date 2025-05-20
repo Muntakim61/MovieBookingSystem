@@ -114,5 +114,46 @@ namespace MovieBookingSystem.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null)
+                return NotFound();
+
+            var actor = await _context.Actors.FindAsync(id);
+
+            if (actor == null)
+                return NotFound();
+
+            return View(actor);
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, [Bind("ActorId,Name,Biography,DateOfBirth,ImageUrl")] Actor actor)
+        {
+            if (id != actor.ActorId)
+                return NotFound();
+
+            if (!ModelState.IsValid)
+                return View(actor);
+
+            try
+            {
+                _context.Update(actor);
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!_context.Actors.Any(e => e.ActorId == id))
+                    return NotFound();
+                else
+                    throw;
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
     }
 }

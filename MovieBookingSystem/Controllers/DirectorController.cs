@@ -29,7 +29,7 @@ namespace MovieBookingSystem.Controllers
             var directors = await _context.Directors
                 .Select(a => new
                 {
-                    actorId = a.DirectorId,
+                    directorId = a.DirectorId,
                     name = a.Name,
                     biography = a.Biography,
                     dateOfBirth = a.DateOfBirth.ToString("yyyy-MM-dd"),
@@ -113,5 +113,48 @@ namespace MovieBookingSystem.Controllers
 
             return RedirectToAction(nameof(Index));
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null)
+                return NotFound();
+
+            var director = await _context.Directors.FindAsync(id);
+
+            if (director == null)
+                return NotFound();
+
+            return View(director);
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, [Bind("DirectorId,Name,Biography,DateOfBirth,ImageUrl")] Director director)
+        {
+            if (id != director.DirectorId)
+                return NotFound();
+
+            if (!ModelState.IsValid)
+                return View(director);
+
+            try
+            {
+                _context.Update(director);
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!_context.Directors.Any(e => e.DirectorId == id))
+                    return NotFound();
+                else
+                    throw;
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
+
     }
 }
