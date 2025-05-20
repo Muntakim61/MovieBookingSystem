@@ -5,6 +5,7 @@ using MovieBookingSystem.Data;
 using MovieBookingSystem.Models;
 using System.Threading.Tasks;
 using System.Linq;
+using System.IO;
 
 namespace MovieBookingSystem.Controllers
 {
@@ -76,6 +77,40 @@ namespace MovieBookingSystem.Controllers
             await _context.SaveChangesAsync();
 
             TempData["ConsoleMessage"] = "Director saved successfully. Redirecting to Index.";
+            return RedirectToAction(nameof(Index));
+        }
+        [HttpGet]
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+                return NotFound();
+
+            var director = await _context.Directors
+                .FirstOrDefaultAsync(a => a.DirectorId == id);
+
+            if (director == null)
+                return NotFound();
+
+            return View(director);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var director = await _context.Directors
+                .Include(a => a.Movies)
+                .FirstOrDefaultAsync(a => a.DirectorId == id);
+
+            if (director == null)
+                return NotFound();
+
+
+            //_context.Movies.RemoveRange(director.Movies);
+
+            _context.Directors.Remove(director);
+            await _context.SaveChangesAsync();
+
             return RedirectToAction(nameof(Index));
         }
     }

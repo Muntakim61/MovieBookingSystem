@@ -18,6 +18,5 @@ namespace MovieBookingSystem.Models
 
         public string ImageUrl { get; set; }
         public ICollection<MovieActor> MovieActors { get; set; } = new List<MovieActor>();
-
     }
 }

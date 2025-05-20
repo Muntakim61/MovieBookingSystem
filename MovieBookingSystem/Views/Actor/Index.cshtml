@@ -28,34 +28,44 @@
             { title: "Biography", field: "biography", editor: "input" },
             { title: "Date of Birth", field: "dateOfBirth", editor: "input" },
             {
-              title: "Image",
-              field: "imageUrl",
-              formatter: function(cell, formatterParams) {
-                  const url = cell.getValue();
-                  return `<img src="${url}" alt="Actor Image" style="height: 60px; border-radius: 5px;" />`;
-              }
+                title: "Image",
+                field: "imageUrl",
+                formatter: function(cell) {
+                    const url = cell.getValue();
+                    return `<img src="${url}" alt="Actor Image" style="height: 60px; border-radius: 5px;" />`;
+                }
             },
             {
                 title: "Actions",
-                formatter: "buttonCross",
-                width: 100,
-                align: "center",
-                cellClick: function (e, cell) {
-                    var actorId = cell.getRow().getData().actorId;
-                    fetch("/Actor/DeleteConfirmed/" + actorId, {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" }
-                    }).then(() => table.replaceData());
-                }
+                formatter: function(cell) {
+                    var data = cell.getRow().getData();
+                    return `
+                        <button class="btn btn-sm btn-warning me-1 action-edit" data-id="${data.actorId}">Edit</button>
+                        <button class="btn btn-sm btn-danger action-delete" data-id="${data.actorId}">Delete</button>
+                    `;
+                },
+                width: 180,
+                hozAlign: "center"
             }
-        ],
-        cellEdited: function (cell) {
-            let rowData = cell.getRow().getData();
-            fetch("/Actor/Edit/" + rowData.actorId, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(rowData)
-            });
+        ]
+    });
+
+    document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('action-edit')) {
+            const id = e.target.getAttribute('data-id');
+            window.location.href = '/Actor/Edit/' + id;
+        } else if (e.target.classList.contains('action-delete')) {
+            const id = e.target.getAttribute('data-id');
+            window.location.href = '/Actor/Delete/' + id;
         }
+    });
+
+    table.on("cellEdited", function(cell) {
+        let rowData = cell.getRow().getData();
+        fetch("/Actor/Edit/" + rowData.actorId, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(rowData)
+        });
     });
 </script>

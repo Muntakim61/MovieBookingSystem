@@ -19,13 +19,10 @@ namespace MovieBookingSystem.Models
         [Required]
 
         public decimal Price { get; set; }
-        [Required]
 
         
-        public int DirectorId { get; set; }
-        [Required]
-        public Director Director { get; set; }
-        [Required]
-        public ICollection<MovieActor> MovieActors { get; set; }
+        public int? DirectorId { get; set; }
+        public Director? Director { get; set; }
+        public ICollection<MovieActor>? MovieActors { get; set; }
     }
 }

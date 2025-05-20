@@ -79,42 +79,6 @@ namespace MovieBookingSystem.Controllers
             return Json(new { success = true });
         }
 
-        public ActionResult Edit(int id)
-        {
-            var movie = _context.Movies
-                          .Include(m => m.MovieActors)
-                          .FirstOrDefault(m => m.MovieId == id);
-
-            if (movie == null)
-                return HttpNotFound();
-
-            var vm = new MovieEditViewModel
-            {
-                MovieId = movie.MovieId,
-                Title = movie.Title,
-                Genre = movie.Genre,
-                ReleaseDate = movie.ReleaseDate,
-                Duration = movie.Duration,
-                Price = movie.Price,
-                SelectedDirectorId = movie.DirectorId,
-                SelectedActorIds = movie.MovieActors.Select(ma => ma.ActorId).ToList(),
-
-                Directors = _context.Directors.Select(d => new SelectListItem
-                {
-                    Value = d.DirectorId.ToString(),
-                    Text = d.Name
-                }).ToList(),
-
-                Actors = _context.Actors.Select(a => new SelectListItem
-                {
-                    Value = a.ActorId.ToString(),
-                    Text = a.Name
-                }).ToList()
-            };
-
-            return View(vm);
-        }
-
         private ActionResult HttpNotFound()
         {
             throw new NotImplementedException();

@@ -18,7 +18,7 @@
     var table = new Tabulator("#director-table", {
         height: 500,
         layout: "fitColumns",
-        ajaxURL: "/Director/GetDirectors", 
+        ajaxURL: "/Director/GetDirectors",
         pagination: "remote",
         paginationSize: 10,
         ajaxConfig: "GET",
@@ -28,45 +28,51 @@
             { title: "Biography", field: "biography", editor: "input" },
             { title: "Date of Birth", field: "dateOfBirth", editor: "input" },
             {
-              title: "Image",
-              field: "imageUrl",
-              formatter: function(cell, formatterParams) {
-                  const url = cell.getValue();
-                  return `<img src="${url}" alt="Director Image" style="height: 60px; border-radius: 5px;" />`;
-              }
-            },
-             {
-                title: "Actions",
-                formatter: function(cell, formatterParams) {
-                    var data = cell.getRow().getData();
-                   
-                    return `
-                        <button class="btn btn-sm btn-warning me-1 edit-btn" data-id="${data.directorId}">Edit</button>
-                        <button class="btn btn-sm btn-danger delete-btn" data-id="${data.directorId}">Delete</button>
-                    `;
-                },
-                width: 180,
-                hozAlign: "center",
-                cellClick: function(e, cell) {
-                    var target = e.target;
-                    var directorId = cell.getRow().getData().directorId;
-
-                    if (target.classList.contains('edit-btn')) {
-                        window.location.href = '/Director/Edit/' + directorId;
-                    } else if (target.classList.contains('delete-btn')) {
-                        window.location.href = '/Director/Delete/' + directorId;
-                    }
+                title: "Image",
+                field: "imageUrl",
+                formatter: function(cell) {
+                    const url = cell.getValue();
+                    return `<img src="${url}" alt="Director Image" style="height: 60px; border-radius: 5px;" />`;
                 }
-            }
+            },
+                {
+        title: "Actions",
+        formatter: function(cell) {
+            var data = cell.getRow().getData();
+            return `
+                <button class="btn btn-sm btn-warning me-1 edit-btn" data-id="${data.directorId}">Edit</button>
+                <button class="btn btn-sm btn-danger delete-btn" data-id="${data.directorId}">Delete</button>
+            `;
+        },
+        width: 180,
+        hozAlign: "center",
+        cellClick: function(e, cell) {
+            const rowData = cell.getRow().getData();
+            const id = rowData.directorId;
 
-        ],
-        cellEdited: function (cell) {
-            let rowData = cell.getRow().getData();
-            fetch("/Director/Edit/" + rowData.directorId, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(rowData)
-            });
+            if (e.target.classList.contains('edit-btn')) {
+                console.log("Edit clicked. Row data:", rowData);
+                window.location.href = '/Director/Edit/' + id;
+            } else if (e.target.classList.contains('delete-btn')) {
+                console.log("Delete clicked. Row data:", rowData);
+                console.log("Redirecting to delete...");
+                window.location.href = '/Director/Delete/' + id;
+            }
         }
+    }
+
+        ]
+    });
+
+    
+
+
+    table.on("cellEdited", function(cell) {
+        let rowData = cell.getRow().getData();
+        fetch("/Director/Edit/" + rowData.directorId, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(rowData)
+        });
     });
 </script>
