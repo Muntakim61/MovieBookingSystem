@@ -1,0 +1,74 @@
+﻿@model MovieBookingSystem.Models.Director
+
+@{
+    ViewData["Title"] = "Edit Director";
+}
+
+<h2 class="mb-4 text-primary">@ViewData["Title"]</h2>
+
+<form asp-action="Edit" method="post" class="needs-validation" novalidate>
+    <input type="hidden" asp-for="DirectorId" />
+
+    <div class="mb-3">
+        <label asp-for="Name" class="form-label fw-semibold"></label>
+        <input asp-for="Name" class="form-control" placeholder="Enter director's name" required />
+        <div class="invalid-feedback">
+            Please provide a name.
+        </div>
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Biography" class="form-label fw-semibold"></label>
+        <textarea asp-for="Biography" class="form-control" rows="4" placeholder="Brief biography..." required></textarea>
+        <div class="invalid-feedback">
+            Biography is required.
+        </div>
+        <span asp-validation-for="Biography" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="DateOfBirth" class="form-label fw-semibold"></label>
+        <input asp-for="DateOfBirth" type="date" class="form-control" required />
+        <div class="invalid-feedback">
+            Please select a valid date.
+        </div>
+        <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+    </div>
+
+    <div class="mb-4">
+        <label asp-for="ImageUrl" class="form-label fw-semibold"></label>
+        <input asp-for="ImageUrl" class="form-control" placeholder="https://example.com/image.jpg" />
+        <small class="form-text text-muted">Optional: Provide a URL to the director's image</small>
+        <span asp-validation-for="ImageUrl" class="text-danger"></span>
+    </div>
+
+    <div class="d-flex gap-3">
+        <button type="submit" class="btn btn-success px-4">Save Changes</button>
+        <a asp-action="Index" class="btn btn-outline-secondary px-4">Cancel</a>
+    </div>
+</form>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+    <script>
+        (() => {
+            'use strict'
+            const forms = document.querySelectorAll('.needs-validation')
+            Array.from(forms).forEach(form => {
+                form.addEventListener('submit', event => {
+                    if (!form.checkValidity()) {
+                        event.preventDefault()
+                        event.stopPropagation()
+                    }
+                    form.classList.add('was-validated')
+                }, false)
+            })
+        })();
+
+        @if (TempData["ConsoleMessage"] != null)
+        {
+            <text>console.log("@TempData["ConsoleMessage"]");</text>
+        }
+    </script>
+}

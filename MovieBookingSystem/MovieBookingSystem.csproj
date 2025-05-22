@@ -7,6 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Views\Hall\**" />
+    <Content Remove="Views\Hall\**" />
+    <EmbeddedResource Remove="Views\Hall\**" />
+    <None Remove="Views\Hall\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="9.0.4" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.4" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.4">
@@ -24,6 +31,7 @@
   <ItemGroup>
     <Folder Include="Views\NewFolder1\" />
     <Folder Include="Views\NewFolder\" />
+    <Folder Include="wwwroot\NewFolder\" />
   </ItemGroup>
 
 </Project>
