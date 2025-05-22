@@ -11,10 +11,14 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500&display=swap" rel="stylesheet">
+
 
     <style>
         body {
             background-color: #f8f9fa;
+            margin-bottom: 0px;
         }
 
         .pacifico-regular {
@@ -22,45 +26,90 @@
             font-weight: 500;
             font-style: normal;
             font-size: 32px;
+            color: #212529;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+            animation: glowText 2s ease-in-out infinite alternate;
         }
 
-        .navbar-brand {
-            color: #212529 !important;
-            transition: color 0.3s ease;
+        @@keyframes glowText {
+            from
+
+        {
+            text-shadow: 0 0 5px #ffc107, 0 0 10px #ffcc00;
         }
 
-            .navbar-brand:hover {
-                color: #000000 !important;
-            }
+        to {
+            text-shadow: 0 0 10px #ff8800, 0 0 20px #ffaa00;
+        }
+
+        }
+
+        .navbar-brand:hover {
+            color: #000000 !important;
+        }
 
         .navbar-nav .nav-link {
             font-size: 18px;
             padding: 8px 16px;
-            transition: background-color 0.2s, color 0.2s;
-            border-radius: 0.25rem;
+            position: relative;
+            transition: color 0.3s ease;
         }
 
+            .navbar-nav .nav-link::after {
+                content: "";
+                position: absolute;
+                width: 0%;
+                height: 2px;
+                bottom: 0;
+                left: 0;
+                background-color: #000;
+                transition: width 0.3s ease-in-out;
+            }
+
+            .navbar-nav .nav-link:hover::after {
+                width: 100%;
+            }
+
             .navbar-nav .nav-link:hover {
-                background-color: #ffc107;
                 color: #000;
             }
 
+        .card:hover img {
+            transform: scale(1.05);
+            filter: brightness(100%);
+        }
+
+        .card-title {
+            color: #ffc107;
+        }
+
+        .card:hover {
+            box-shadow: 0 8px 20px rgba(255, 193, 7, 0.3);
+        }
+
+
         footer {
             padding: 1rem 0;
+            font-size: 16px;
+            background-color: #ffc107 !important;
         }
 
             footer a {
                 text-decoration: none;
-                color: #f8f9fa;
+                color: #212529;
+                transition: all 0.3s ease;
             }
 
                 footer a:hover {
                     text-decoration: underline;
+                    color: #000;
                 }
     </style>
+
+
 </head>
 
-<body class="d-flex flex-column min-vh-100">
+<body class="d-flex flex-column">
     <header>
         <nav class="navbar navbar-expand-lg navbar-light bg-warning shadow-sm">
             <div class="container-lg">
@@ -87,7 +136,7 @@
         </nav>
     </header>
 
-    <div class="container-lg py-4">
+    <div class="container-lg py-4 min-vh-100">
         <main role="main">
             @RenderBody()
         </main>
@@ -103,6 +152,14 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <script>
+        AOS.init({
+            duration: 1000,
+            once: false
+        });
+    </script>
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
