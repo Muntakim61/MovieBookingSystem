@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 
 namespace MovieBookingSystem.Models
 {
@@ -17,7 +18,7 @@ namespace MovieBookingSystem.Models
 
         public int Duration { get; set; }
         [Required]
-
+        [Precision(6, 2)]
         public decimal Price { get; set; }
 
         

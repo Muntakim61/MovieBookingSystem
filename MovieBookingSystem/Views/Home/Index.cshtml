@@ -2,7 +2,114 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+@{
+    var popularMovies = new[]
+    {
+        new {
+            Title = "Dune: Part Two",
+            Poster = "https://i.ibb.co/5XTf9JGQ/DUNE-2.webp",
+            Description = "Paul Atreides unites with Chani and the Fremen while seeking revenge.",
+            Year = "2024"
+        },
+        new {
+            Title = "Spider-Man: No Way Home",
+            Poster = "https://i.ibb.co/mVGfh4f2/NWH.jpg",
+            Description = "Peter Parker faces multiversal enemies and secrecy issues.",
+            Year = "2021"
+        },
+        new {
+            Title = "Luca",
+            Poster = "https://i.ibb.co/Y79qq5Zd/LUCA.jpg",
+            Description = "A boy shares an unforgettable summer filled with secrets.",
+            Year = "2021"
+        },
+        new {
+            Title = "Oppenheimer",
+            Poster = "https://i.ibb.co/pvdZmDWv/oppenheimer-movie-poster.jpg",
+            Description = "The story of J. Robert Oppenheimer and the atomic bomb.",
+            Year = "2023"
+        },
+        new {
+            Title = "Top Gun: Maverick",
+            Poster = "https://i.ibb.co/Rk0qY3cX/TGM.jpg",
+            Description = "Maverick trains a new generation of pilots.",
+            Year = "2022"
+        },
+        new {
+            Title = "Inside Out 2",
+            Poster = "https://i.ibb.co/qFDhgdM3/Inside-Out-2-poster.jpg",
+            Description = "Riley deals with teenage emotions in this Pixar sequel.",
+            Year = "2024"
+        }
+    };
+}
+
+
+<section class="hero-section d-flex align-items-center text-center text-white" style="background: url('https://i.ibb.co/Y79qq5Zd/LUCA.jpg') center center / cover no-repeat; min-height: 65vh; position: relative;">
+    <div style="background-color: rgba(0, 0, 0, 0.5); position: absolute; top: 0; right: 0; bottom: 0; left: 0;"></div>
+    <div class="container position-relative z-2">
+        <h1 class="display-3 fw-bold mb-3">Book Your Favorite Movies Instantly</h1>
+        <p class="lead">Enjoy seamless booking and experience the magic of cinema with ShowTime.</p>
+        <a class="btn btn-warning btn-lg mt-3 text-dark fw-semibold" href="/Movie/Index">Browse Movies</a>
+    </div>
+</section>
+
+
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center text-dark display-5 mb-5 d-flex justify-content-center align-items-center gap-2" style="font-family: 'Cinzel', serif; letter-spacing: 2px;">
+            <img src="/Images/103271_cinema_icon.png" alt="Cinema Icon" style="height: 45px; width: auto;" />
+            Popular Movies
+        </h2>
+        <div class="row g-4">
+            @foreach (var movie in popularMovies)
+            {
+                <div class="col-sm-12 col-md-6 col-lg-4" data-aos="zoom-in">
+                    <div class="card h-100 border-0 text-white" style="background-color: #1c1c1e; border-radius: 15px; overflow: hidden;">
+                        <img src="@movie.Poster" class="card-img-top" alt="@movie.Title"
+                             style="height: 300px; object-fit: cover; filter: brightness(90%); transition: transform 0.4s ease;">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title" style="font-weight: 600;">@movie.Title (@movie.Year)</h5>
+                            <p class="card-text text-light" style="font-size: 0.95rem;">@movie.Description</p>
+                            <button class="btn btn-warning mt-auto" disabled style="border-radius: 25px;">🎟 View Details</button>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
+
+
+<section class="reviews-section bg-light py-5">
+    <div class="container">
+        <h2 class="text-center mb-4 display-5" style="font-family: 'Cinzel', serif; letter-spacing: 2px;">What Our Users Say</h2>
+        <div class="row justify-content-center">
+            <div class="col-md-4 mb-4">
+                <div class="card shadow-sm h-100 border-0">
+                    <div class="card-body">
+                        <p class="card-text">🎬 “Booking tickets has never been this smooth. Loved the UI!”</p>
+                        <h6 class="card-subtitle text-muted mt-3">– Aisha, Dhaka</h6>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card shadow-sm h-100 border-0">
+                    <div class="card-body">
+                        <p class="card-text">🍿 “Great user experience. Found my movie and seats in under 2 minutes.”</p>
+                        <h6 class="card-subtitle text-muted mt-3">– Rayhan, Chittagong</h6>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card shadow-sm h-100 border-0">
+                    <div class="card-body">
+                        <p class="card-text">⭐ “Impressive performance and layout. Highly recommend!”</p>
+                        <h6 class="card-subtitle text-muted mt-3">– Farzana, Sylhet</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
