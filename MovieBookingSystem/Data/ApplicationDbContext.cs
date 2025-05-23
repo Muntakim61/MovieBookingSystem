@@ -13,6 +13,8 @@ namespace MovieBookingSystem.Data
         public DbSet<Director> Directors { get; set; }
         public DbSet<MovieActor> MovieActors { get; set; }
 
+        public DbSet<Hall> Halls { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
