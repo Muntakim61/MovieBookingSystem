@@ -1,0 +1,65 @@
+﻿@model MovieBookingSystem.Models.CreateMovieViewModel
+
+@{
+    ViewData["Title"] = "Create Movie";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Create Movie</h2>
+
+<form asp-action="Create" method="post" class="form-horizontal">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="form-group">
+        <label asp-for="Title" class="control-label"></label>
+        <input asp-for="Title" class="form-control" />
+        <span asp-validation-for="Title" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Genre" class="control-label"></label>
+        <input asp-for="Genre" class="form-control" />
+        <span asp-validation-for="Genre" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="ReleaseDate" class="control-label"></label>
+        <input asp-for="ReleaseDate" class="form-control" type="date" />
+        <span asp-validation-for="ReleaseDate" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Duration" class="control-label"></label>
+        <input asp-for="Duration" class="form-control" type="number" />
+        <span asp-validation-for="Duration" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Price" class="control-label"></label>
+        <input asp-for="Price" class="form-control" type="number" step="0.01" />
+        <span asp-validation-for="Price" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="SelectedDirectorId" class="control-label"></label>
+        <select asp-for="SelectedDirectorId" asp-items="Model.Directors" class="form-control">
+            <option value="">-- Select Director --</option>
+        </select>
+        <span asp-validation-for="SelectedDirectorId" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label">Actors</label>
+        <select asp-for="SelectedActorIds" asp-items="Model.Actors" class="form-control" multiple="multiple" size="5"></select>
+        <span asp-validation-for="SelectedActorIds" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mt-3">
+        <button type="submit" class="btn btn-primary">Create Movie</button>
+        <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
