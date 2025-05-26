@@ -1,75 +1,60 @@
 ﻿@{
-    ViewData["Title"] = "Directors";
+    ViewData["Title"] = "Halls";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Directors</h2>
+<h2>Halls</h2>
 
 <p>
-    <a class="btn btn-primary" href="/Director/Create">Create New Director</a>
+    <a class="btn btn-primary" href="/Hall/Create">Create New Hall</a>
 </p>
 
 <link href="https://unpkg.com/tabulator-tables@5.4.3/dist/css/tabulator.min.css" rel="stylesheet" />
 <script src="https://unpkg.com/tabulator-tables@5.4.3/dist/js/tabulator.min.js"></script>
 
-<div id="director-table"></div>
+<div id="hall-table"></div>
 
 <script>
-    var table = new Tabulator("#director-table", {
+    var table = new Tabulator("#hall-table", {
         height: 500,
         layout: "fitColumns",
-        ajaxURL: "/Director/GetDirectors",
+        ajaxURL: "/Hall/GetHalls",
         pagination: "remote",
         paginationSize: 10,
         ajaxConfig: "GET",
         columns: [
-            { title: "ID", field: "directorId", visible: false },
+            { title: "ID", field: "hallId", visible: false },
             { title: "Name", field: "name", editor: "input" },
-            { title: "Biography", field: "biography", editor: "input" },
-            { title: "Date of Birth", field: "dateOfBirth", editor: "input" },
+            { title: "Location", field: "location", editor: "input" },
+            { title: "Capacity", field: "capacity", editor: "input" },
             {
-                title: "Image",
-                field: "imageUrl",
+                title: "Actions",
                 formatter: function(cell) {
-                    const url = cell.getValue();
-                    return `<img src="${url}" alt="Director Image" style="height: 60px; border-radius: 5px;" />`;
-                }
-            },
-                {
-        title: "Actions",
-        formatter: function(cell) {
-            var data = cell.getRow().getData();
-            return `
-                <button class="btn btn-sm btn-warning me-1 edit-btn" data-id="${data.directorId}">Edit</button>
-                <button class="btn btn-sm btn-danger delete-btn" data-id="${data.directorId}">Delete</button>
-            `;
-        },
-        width: 180,
-        hozAlign: "center",
-        cellClick: function(e, cell) {
-            const rowData = cell.getRow().getData();
-            const id = rowData.directorId;
-
-            if (e.target.classList.contains('edit-btn')) {
-                console.log("Edit clicked. Row data:", rowData);
-                window.location.href = '/Director/Edit/' + id;
-            } else if (e.target.classList.contains('delete-btn')) {
-                console.log("Delete clicked. Row data:", rowData);
-                console.log("Redirecting to delete...");
-                window.location.href = '/Director/Delete/' + id;
+                    var data = cell.getRow().getData();
+                    return `
+                        <button class="btn btn-sm btn-warning me-1 action-edit" data-id="${data.hallId}">Edit</button>
+                        <button class="btn btn-sm btn-danger action-delete" data-id="${data.hallId}">Delete</button>
+                    `;
+                },
+                width: 180,
+                hozAlign: "center"
             }
-        }
-    }
-
         ]
     });
 
-    
-
+    document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('action-edit')) {
+            const id = e.target.getAttribute('data-id');
+            window.location.href = '/Hall/Edit/' + id;
+        } else if (e.target.classList.contains('action-delete')) {
+            const id = e.target.getAttribute('data-id');
+            window.location.href = '/Hall/Delete/' + id;
+        }
+    });
 
     table.on("cellEdited", function(cell) {
         let rowData = cell.getRow().getData();
-        fetch("/Director/Edit/" + rowData.directorId, {
+        fetch("/Hall/Edit/" + rowData.hallId, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(rowData)

@@ -32,16 +32,13 @@
         }
 
         @@keyframes glowText {
-            from
+            from {
+                text-shadow: 0 0 5px #ffc107, 0 0 10px #ffcc00;
+            }
 
-        {
-            text-shadow: 0 0 5px #ffc107, 0 0 10px #ffcc00;
-        }
-
-        to {
-            text-shadow: 0 0 10px #ff8800, 0 0 20px #ffaa00;
-        }
-
+            to {
+                text-shadow: 0 0 10px #ff8800, 0 0 20px #ffaa00;
+            }
         }
 
         .navbar-brand:hover {
@@ -130,6 +127,9 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-controller="Director" asp-action="Index">Directors</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-controller="Hall" asp-action="Index">Hall</a>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -145,7 +145,7 @@
     <footer class="text-dark bg-warning mt-auto py-3">
         <div class="container-lg text-center">
             &copy; 2025 - <span class="pacifico-regular">ShowTime</span> -
-            <a asp-area=""   asp-controller="Home" asp-action="Privacy">Privacy</a>
+            <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
 

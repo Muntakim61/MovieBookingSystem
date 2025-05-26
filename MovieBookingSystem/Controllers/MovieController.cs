@@ -3,6 +3,9 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MovieBookingSystem.Data;
 using MovieBookingSystem.Models;
+using System.Linq;
+using System.Threading.Tasks;
+using System;
 
 namespace MovieBookingSystem.Controllers
 {
@@ -15,11 +18,83 @@ namespace MovieBookingSystem.Controllers
             _context = context;
         }
 
+        // GET: /Movie/Index
         public IActionResult Index()
         {
             return View();
         }
 
+        // GET: /Movie/Create
+        [HttpGet]
+        public IActionResult Create()
+        {
+            var vm = new CreateMovieViewModel
+            {
+                Directors = _context.Directors.Select(d => new SelectListItem
+                {
+                    Value = d.DirectorId.ToString(),
+                    Text = d.Name
+                }).ToList(),
+
+                Actors = _context.Actors.Select(a => new SelectListItem
+                {
+                    Value = a.ActorId.ToString(),
+                    Text = a.Name
+                }).ToList(),
+
+                ReleaseDate = DateTime.Today
+            };
+
+            return View(vm);
+        }
+
+        // POST: /Movie/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(CreateMovieViewModel vm)
+        {
+            if (!ModelState.IsValid)
+            {
+                vm.Directors = _context.Directors.Select(d => new SelectListItem
+                {
+                    Value = d.DirectorId.ToString(),
+                    Text = d.Name
+                }).ToList();
+
+                vm.Actors = _context.Actors.Select(a => new SelectListItem
+                {
+                    Value = a.ActorId.ToString(),
+                    Text = a.Name
+                }).ToList();
+
+                return View(vm);
+            }
+
+            var movie = new Movie
+            {
+                Title = vm.Title,
+                Genre = vm.Genre,
+                ReleaseDate = vm.ReleaseDate,
+                Duration = vm.Duration,
+                Price = vm.Price,
+                DirectorId = vm.SelectedDirectorId
+            };
+
+            if (vm.SelectedActorIds != null)
+            {
+                movie.MovieActors = vm.SelectedActorIds.Select(actorId => new MovieActor
+                {
+                    ActorId = actorId
+                }).ToList();
+            }
+
+            _context.Movies.Add(movie);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        // GET: /Movie/GetMovies
         [HttpGet]
         public async Task<IActionResult> GetMovies()
         {
@@ -44,7 +119,7 @@ namespace MovieBookingSystem.Controllers
             return Json(movieList);
         }
 
-        
+        // POST: /Movie/SaveMovie
         [HttpPost]
         public async Task<IActionResult> SaveMovie([FromBody] Movie movie)
         {
@@ -61,7 +136,7 @@ namespace MovieBookingSystem.Controllers
             return Json(new { success = true });
         }
 
-        
+        // POST: /Movie/DeleteMovie
         [HttpPost]
         public async Task<IActionResult> DeleteMovie([FromBody] int id)
         {
@@ -79,25 +154,30 @@ namespace MovieBookingSystem.Controllers
             return Json(new { success = true });
         }
 
-        private ActionResult HttpNotFound()
-        {
-            throw new NotImplementedException();
-        }
-
+        // POST: /Movie/Edit
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(MovieEditViewModel vm)
         {
             if (!ModelState.IsValid)
             {
-                
-                vm.Directors = _context.Directors.Select(d => new SelectListItem { Value = d.DirectorId.ToString(), Text = d.Name }).ToList();
-                vm.Actors = _context.Actors.Select(a => new SelectListItem { Value = a.ActorId.ToString(), Text = a.Name }).ToList();
+                vm.Directors = _context.Directors.Select(d => new SelectListItem
+                {
+                    Value = d.DirectorId.ToString(),
+                    Text = d.Name
+                }).ToList();
+
+                vm.Actors = _context.Actors.Select(a => new SelectListItem
+                {
+                    Value = a.ActorId.ToString(),
+                    Text = a.Name
+                }).ToList();
+
                 return View(vm);
             }
 
             var movie = _context.Movies.Include(m => m.MovieActors).FirstOrDefault(m => m.MovieId == vm.MovieId);
-            if (movie == null) return HttpNotFound();
+            if (movie == null) return NotFound();
 
             movie.Title = vm.Title;
             movie.Genre = vm.Genre;
@@ -106,7 +186,7 @@ namespace MovieBookingSystem.Controllers
             movie.Price = vm.Price;
             movie.DirectorId = vm.SelectedDirectorId;
 
-            
+            // Replace movie actors
             movie.MovieActors.Clear();
             foreach (var actorId in vm.SelectedActorIds)
             {
@@ -116,6 +196,5 @@ namespace MovieBookingSystem.Controllers
             _context.SaveChanges();
             return RedirectToAction("Index");
         }
-
     }
 }
