@@ -55,13 +55,13 @@
 </section>
 
 
-<section class="py-5">
-    <div class="container">
-        <h2 class="text-center text-dark display-5 mb-5 d-flex justify-content-center align-items-center gap-2" style="font-family: 'Cinzel', serif; letter-spacing: 2px;">
+<section class="">
+    <div class="container bg-warning">
+        <h2 class="text-center text-dark display-5 mb-5 d-flex justify-content-center align-items-center gap-2 pt-4" style="font-family: 'Cinzel', serif; letter-spacing: 2px;">
             <img src="/Images/103271_cinema_icon.png" alt="Cinema Icon" style="height: 45px; width: auto;" />
             Popular Movies
         </h2>
-        <div class="row g-4">
+        <div class="row g-4 py-4">
             @foreach (var movie in popularMovies)
             {
                 <div class="col-sm-12 col-md-6 col-lg-4" data-aos="zoom-in">
@@ -116,7 +116,7 @@
 
 <section class="py-5 bg-warning text-dark">
     <div class="container">
-        <h2 class="text-center mb-3 pacifico-regular display-5">Join the ShowTime Club 🎬</h2>
+        <h2 class="text-center mb-3 display-5" style="font-family: 'Cinzel', serif; letter-spacing: 2px;">Join the ShowTime Club</h2>
         <p class="text-center mb-4 fs-5">Get the latest movie releases, trailers & exclusive updates—right in your inbox!</p>
 
         <form method="post" class="row justify-content-center align-items-center g-3">
