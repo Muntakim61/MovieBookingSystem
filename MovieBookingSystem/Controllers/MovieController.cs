@@ -77,7 +77,8 @@ namespace MovieBookingSystem.Controllers
                 ReleaseDate = vm.ReleaseDate,
                 Duration = vm.Duration,
                 Price = vm.Price,
-                DirectorId = vm.SelectedDirectorId
+                DirectorId = vm.SelectedDirectorId,
+                ImageUrl = vm.ImageUrl
             };
 
             if (vm.SelectedActorIds != null)
@@ -110,6 +111,7 @@ namespace MovieBookingSystem.Controllers
                 m.Title,
                 m.Genre,
                 m.ReleaseDate,
+                m.ImageUrl,
                 m.Duration,
                 m.Price,
                 DirectorName = m.Director.Name,
@@ -134,6 +136,21 @@ namespace MovieBookingSystem.Controllers
 
             await _context.SaveChangesAsync();
             return Json(new { success = true });
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null)
+                return NotFound();
+
+            var movie = await _context.Movies.FindAsync(id);
+
+            if (movie == null)
+                return NotFound();
+
+            return View(movie);
         }
 
         // POST: /Movie/DeleteMovie
@@ -185,8 +202,9 @@ namespace MovieBookingSystem.Controllers
             movie.Duration = vm.Duration;
             movie.Price = vm.Price;
             movie.DirectorId = vm.SelectedDirectorId;
+            movie.ImageUrl = vm.ImageUrl;
 
-            // Replace movie actors
+            
             movie.MovieActors.Clear();
             foreach (var actorId in vm.SelectedActorIds)
             {

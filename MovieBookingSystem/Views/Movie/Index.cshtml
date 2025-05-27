@@ -31,6 +31,14 @@
             { title: "Price", field: "price", editor: "number" },
             { title: "Director", field: "directorName" },
             {
+                title: "Image",
+                field: "imageUrl",
+                formatter: function(cell) {
+                    const url = cell.getValue();
+                    return `<img src="${url}" alt="Director Image" style="height: 60px; border-radius: 5px;" />`;
+                }
+            },
+            {
                 title: "Actions",
                 formatter: "buttonCross",
                 width: 100,

@@ -91,16 +91,53 @@
             background-color: #ffc107 !important;
         }
 
-            footer a {
-                text-decoration: none;
-                color: #212529;
-                transition: all 0.3s ease;
-            }
+        footer a {
+            text-decoration: none;
+            color: #212529;
+            transition: all 0.3s ease;
+        }
 
-                footer a:hover {
-                    text-decoration: underline;
-                    color: #000;
-                }
+        footer a:hover {
+            text-decoration: underline;
+            color: #000;
+        }
+
+        .image-overlay-wrapper {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .image-overlay-wrapper img {
+            display: block;
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+            filter: brightness(90%);
+        }
+
+        .image-overlay-wrapper:hover img {
+            transform: scale(1.05);
+        }
+
+        .image-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .image-overlay-wrapper:hover .image-overlay {
+            opacity: 1;
+        }
+
     </style>
 
 
@@ -136,7 +173,7 @@
         </nav>
     </header>
 
-    <div class="container-lg py-4 min-vh-100">
+    <div class="container-lg min-vh-100">
         <main role="main">
             @RenderBody()
         </main>
