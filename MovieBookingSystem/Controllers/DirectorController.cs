@@ -6,6 +6,7 @@ using MovieBookingSystem.Models;
 using System.Threading.Tasks;
 using System.Linq;
 using System.IO;
+using System.Data;
 
 namespace MovieBookingSystem.Controllers
 {
@@ -24,22 +25,59 @@ namespace MovieBookingSystem.Controllers
             return View(await _context.Directors.ToListAsync());
         }
         [HttpGet]
-        public async Task<IActionResult> GetDirectors()
+        public async Task<IActionResult> GetDirectors(int page = 1, int size = 10)
         {
-            var directors = await _context.Directors
-                .Select(a => new
-                {
-                    directorId = a.DirectorId,
-                    name = a.Name,
-                    biography = a.Biography,
-                    dateOfBirth = a.DateOfBirth.ToString("yyyy-MM-dd"),
-                    imageUrl = a.ImageUrl
-                }).ToListAsync();
+            using var connection = _context.Database.GetDbConnection();
+            await connection.OpenAsync();
 
-            return Json(directors);
+            using var command = connection.CreateCommand();
+            command.CommandText = "GetDirectorsPaged";
+            command.CommandType = CommandType.StoredProcedure;
+
+
+            var paramPage = command.CreateParameter();
+            paramPage.ParameterName = "@PageNumber";
+            paramPage.Value = page;
+            command.Parameters.Add(paramPage);
+
+            var paramSize = command.CreateParameter();
+            paramSize.ParameterName = "@PageSize";
+            paramSize.Value = size;
+            command.Parameters.Add(paramSize);
+
+            using var reader = await command.ExecuteReaderAsync();
+
+            var directors = new List<object>();
+            while (await reader.ReadAsync())
+            {
+                directors.Add(new
+                {
+                    directorId = reader.GetInt32(0),
+                    name = reader.GetString(1),
+                    biography = reader.GetString(2),
+                    dateOfBirth = reader.GetString(3),
+                    imageUrl = reader.GetString(4)
+                });
+            }
+
+
+            await reader.NextResultAsync();
+            int totalCount = 0;
+            if (await reader.ReadAsync())
+            {
+                totalCount = reader.GetInt32(0);
+            }
+
+
+            return Json(new
+            {
+                data = directors,
+                last_page = (int)Math.Ceiling((double)totalCount / size)
+            });
         }
 
-       
+
+
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null) return NotFound();

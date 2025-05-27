@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MovieBookingSystem.Data;
 using MovieBookingSystem.Models;
+using System.Data;
 using System.Threading.Tasks;
 
 namespace MovieBookingSystem.Controllers
@@ -22,22 +23,61 @@ namespace MovieBookingSystem.Controllers
             return View(await _context.Actors.ToListAsync());
         }
         [HttpGet]
-        public async Task<IActionResult> GetActors()
+        public async Task<IActionResult> GetActors(int page = 1, int size = 10)
         {
-            var actors = await _context.Actors
-                .Select(a => new
-                {
-                    actorId = a.ActorId,
-                    name = a.Name,
-                    biography = a.Biography,
-                    dateOfBirth = a.DateOfBirth.ToString("yyyy-MM-dd"),
-                    imageUrl = a.ImageUrl
-                }).ToListAsync();
+            using var connection = _context.Database.GetDbConnection();
+            await connection.OpenAsync();
 
-            return Json(actors);
+            using var command = connection.CreateCommand();
+            command.CommandText = "GetActorsPaged";         
+            command.CommandType = CommandType.StoredProcedure;
+
+            
+            var paramPage = command.CreateParameter();
+            paramPage.ParameterName = "@PageNumber";
+            paramPage.Value = page;
+            command.Parameters.Add(paramPage);
+
+            var paramSize = command.CreateParameter();
+            paramSize.ParameterName = "@PageSize";
+            paramSize.Value = size;
+            command.Parameters.Add(paramSize);
+
+            using var reader = await command.ExecuteReaderAsync();
+
+            var actors = new List<object>();
+
+            
+            while (await reader.ReadAsync())
+            {
+                actors.Add(new
+                {
+                    actorId = reader.GetInt32(0),
+                    name = reader.GetString(1),
+                    biography = reader.GetString(2),
+                    dateOfBirth = reader.GetString(3),
+                    imageUrl = reader.GetString(4)
+                });
+            }
+
+            
+            await reader.NextResultAsync();
+            int totalCount = 0;
+            if (await reader.ReadAsync())
+            {
+                totalCount = reader.GetInt32(0);
+            }
+
+            
+            return Json(new
+            {
+                data = actors,
+                last_page = (int)Math.Ceiling((double)totalCount / size)
+            });
         }
 
-        
+
+
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null) return NotFound();
