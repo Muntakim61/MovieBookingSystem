@@ -1,0 +1,36 @@
+﻿.account-container {
+    background: linear-gradient(to right, #000000, #1a1a1a);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 2rem 1rem;
+}
+
+.account-box {
+    background-color: #ffffff;
+    padding: 2rem;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 450px;
+    opacity: 0.97;
+    animation: fadeInUp 0.4s ease-out;
+    box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    transition: box-shadow 0.3s ease;
+}
+
+    .account-box:hover {
+        box-shadow: 0 0 15px rgba(255, 255, 0, 0.5);
+    }
+
+@keyframes fadeInUp {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

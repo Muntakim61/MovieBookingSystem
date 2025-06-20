@@ -195,24 +195,25 @@
 
                 <div class="collapse navbar-collapse justify-content-end" id="mainNavbar">
                     <ul class="navbar-nav gap-3">
-                        @* <li class="nav-item"> *@
-                        @*     <a class="nav-link text-dark" asp-controller="Movie" asp-action="Index">Movies</a> *@
-                        @* </li> *@
-                        @* <li class="nav-item"> *@
-                        @*     <a class="nav-link text-dark" asp-controller="Actor" asp-action="Index">Actors</a> *@
-                        @* </li> *@ 
-                        @* <li class="nav-item"> *@
-                        @*     <a class="nav-link text-dark" asp-controller="Director" asp-action="Index">Directors</a> *@
-                        @* </li> *@
-                        @* <li class="nav-item"> *@
-                        @*     <a class="nav-link text-dark" asp-controller="Hall" asp-action="Index">Hall</a> *@
-                        @* </li> *@
-                        <li class="nav-item">
+                        @* <li class="nav-item">
                             <a class="nav-link text-dark fs-5" asp-controller="Director" asp-action="Index">SignUp</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark fs-5" asp-controller="Hall" asp-action="Index">Login</a>
-                        </li>
+                        </li> *@
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Home" asp-action="Admin">Admin</a>
+                            </li>
+                        }
+                        @if (User.IsInRole("User"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Home" asp-action="User">Users</a>
+                            </li>
+                        }
+                        <partial name="_LoginPartial" />
                     </ul>
                 </div>
             </div>

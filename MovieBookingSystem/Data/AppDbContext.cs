@@ -1,28 +1,28 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using MovieBookingSystem.Models;
 
 namespace MovieBookingSystem.Data
 {
-    public class ApplicationDbContext : DbContext
+    public class AppDbContext : IdentityDbContext<Users>
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-            : base(options) { }
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
+        {
+        }
 
+        // Your domain entities
         public DbSet<Movie> Movies { get; set; }
         public DbSet<Actor> Actors { get; set; }
         public DbSet<Director> Directors { get; set; }
         public DbSet<MovieActor> MovieActors { get; set; }
-
         public DbSet<Hall> Halls { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-
             modelBuilder.Entity<MovieActor>()
                 .HasKey(ma => new { ma.MovieId, ma.ActorId });
-
 
             modelBuilder.Entity<MovieActor>()
                 .HasOne(ma => ma.Movie)

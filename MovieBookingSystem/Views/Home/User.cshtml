@@ -1,0 +1,88 @@
+﻿@{
+    ViewData["Title"] = "User Dashboard";
+}
+
+<style>
+    .dashboard-card {
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .dashboard-card.disabled {
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+    .dashboard-icon {
+        font-size: 2rem;
+        margin-bottom: 10px;
+    }
+</style>
+
+<div class="container py-5">
+    <div class="text-center mb-5">
+        <h1 class="display-5 fw-bold text-dark">🎬 Welcome to Movie Booking System</h1>
+        <p class="lead text-secondary">Your one-stop portal for managing movies, bookings, and your profile.</p>
+    </div>
+
+    <div class="row justify-content-center g-4">
+
+        
+        <div class="col-md-4">
+            <a asp-controller="Home" asp-action="Index" class="text-decoration-none">
+                <div class="bg-warning text-dark p-4 rounded-3 text-center dashboard-card">
+                    <div class="dashboard-icon">🎥</div>
+                    <h5 class="fw-bold">Browse Movies</h5>
+                    <p class="mb-0">Explore and book your favorite movies</p>
+                </div>
+            </a>
+        </div>
+
+        
+        <div class="col-md-4">
+            <div class="bg-dark text-white p-4 rounded-3 text-center dashboard-card disabled">
+                <div class="dashboard-icon">📅</div>
+                <h5 class="fw-bold">My Bookings</h5>
+                <p class="mb-0">Coming soon</p>
+            </div>
+        </div>
+
+        
+        <div class="col-md-4">
+            <div class="bg-secondary text-white p-4 rounded-3 text-center dashboard-card disabled">
+                <div class="dashboard-icon">🧑</div>
+                <h5 class="fw-bold">Edit Profile</h5>
+                <p class="mb-0">Coming soon</p>
+            </div>
+        </div>
+
+        
+        <div class="col-md-4">
+            <a asp-controller="Account" asp-action="VerifyEmail" class="text-decoration-none">
+                <div class="bg-warning text-dark p-4 rounded-3 text-center dashboard-card">
+                    <div class="dashboard-icon">🔒</div>
+                    <h5 class="fw-bold">Change Password</h5>
+                    <p class="mb-0">Verify your email and set a new password</p>
+                </div>
+            </a>
+        </div>
+
+        
+        <div class="col-md-4">
+            <form asp-controller="Account" asp-action="Logout" method="post" class="m-0">
+                <button type="submit" class="w-100 border-0 bg-transparent text-decoration-none">
+                    <div class="bg-danger text-white p-4 rounded-3 text-center dashboard-card">
+                        <div class="dashboard-icon">🚪</div>
+                        <h5 class="fw-bold">Logout</h5>
+                        <p class="mb-0">Sign out of your account</p>
+                    </div>
+                </button>
+            </form>
+        </div>
+
+    </div>
+</div>
