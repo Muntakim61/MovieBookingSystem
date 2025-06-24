@@ -11,9 +11,9 @@ namespace MovieBookingSystem.Controllers
 {
     public class MovieController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly AppDbContext _context;
 
-        public MovieController(ApplicationDbContext context)
+        public MovieController(AppDbContext context)
         {
             _context = context;
         }

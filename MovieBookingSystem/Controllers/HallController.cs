@@ -9,9 +9,9 @@ namespace MovieBookingSystem.Controllers
 {
     public class HallController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly AppDbContext _context;
 
-        public HallController(ApplicationDbContext context)
+        public HallController(AppDbContext context)
         {
             _context = context;
         }

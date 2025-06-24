@@ -12,9 +12,9 @@ namespace MovieBookingSystem.Controllers
 {
     public class DirectorController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly AppDbContext _context;
 
-        public DirectorController(ApplicationDbContext context)
+        public DirectorController(AppDbContext context)
         {
             _context = context;
         }

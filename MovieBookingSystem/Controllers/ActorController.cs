@@ -10,9 +10,9 @@ namespace MovieBookingSystem.Controllers
 {
     public class ActorController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly AppDbContext _context;
 
-        public ActorController(ApplicationDbContext context)
+        public ActorController(AppDbContext context)
         {
             _context = context;
         }
