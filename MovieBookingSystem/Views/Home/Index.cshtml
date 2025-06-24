@@ -42,17 +42,44 @@
             Year = "2024"
         }
     };
+
+    var isAdmin = User.IsInRole("Admin");
+    var isUser = User.IsInRole("User");
+    var isLoggedIn = User.Identity?.IsAuthenticated ?? false;
 }
 
+<section class="hero-section d-flex align-items-center text-center text-white"
+         style="background-image: url('https://i.ibb.co/Y79qq5Zd/LUCA.jpg'); background-position: center center; background-repeat: no-repeat; background-size: cover; min-height: 65vh; position: relative;">
 
-<section class="hero-section d-flex align-items-center text-center text-white" style="background: url('https://i.ibb.co/Y79qq5Zd/LUCA.jpg') center center / cover no-repeat; min-height: 65vh; position: relative;">
     <div style="background-color: rgba(0, 0, 0, 0.5); position: absolute; top: 0; right: 0; bottom: 0; left: 0;"></div>
+
     <div class="container position-relative z-2">
-        <h1 class="display-3 fw-bold mb-3">Book Your Favorite Movies Instantly</h1>
-        <p class="lead">Enjoy seamless booking and experience the magic of cinema with ShowTime.</p>
-        <a class="btn btn-warning btn-lg mt-3 text-dark fw-semibold" href="/Movie/Index">Browse Movies</a>
+        @if (!isLoggedIn)
+        {
+            
+            <h1 class="display-3 fw-bold mb-3">Welcome to ShowTime 🎬</h1>
+            <p class="lead">Join us to experience effortless movie booking & the joy of cinema!</p>
+            <a class="btn btn-warning btn-lg mt-3 text-dark fw-semibold" href="/Identity/Account/Login">Login to Start</a>
+        }
+        else if (isUser)
+        {
+
+            <h1 class="display-3 fw-bold mb-3">Welcome Back, @ViewData["FullName"]</h1>
+            <p class="lead">Your next cinematic adventure is just a click away.</p>
+            //<a class="btn btn-warning btn-lg mt-3 text-dark fw-semibold" href="/Movie/Index">Browse Movies</a>
+            <a class="btn btn-outline-light btn-lg mt-3 ms-2 fw-semibold disabled" href="/Booking/MyBookings">My Bookings</a>
+        }
+        else if (isAdmin)
+        {
+            
+            <h1 class="display-3 fw-bold mb-3">Hello Admin</h1>
+            <p class="lead">Manage movies, halls, and user experiences seamlessly.</p>
+            <a class="btn btn-warning btn-lg mt-3 text-dark fw-semibold" href="/Movie/Index">Manage Movies</a>
+            
+        }
     </div>
 </section>
+
 
 
 <section class="">
@@ -135,3 +162,10 @@
 </section>
 
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+<script>
+    AOS.init({
+        duration: 1000,
+        once: true
+    });
+</script>

@@ -1,9 +1,10 @@
-using System.Diagnostics;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using MovieBookingSystem.Data;
 using MovieBookingSystem.Models;
+using System.Diagnostics;
 
 namespace MovieBookingSystem.Controllers
 {
@@ -20,6 +21,17 @@ namespace MovieBookingSystem.Controllers
 
         public IActionResult Index()
         {
+            string fullName = "User";
+            if (User.Identity.IsAuthenticated)
+            {
+
+                var user = _context.Users.FirstOrDefault(u => u.UserName == User.Identity.Name);
+                if (user != null)
+                {
+                    fullName = user.FullName;
+                }
+            }
+            ViewData["FullName"] = fullName;
             return View();
         }
 
@@ -36,7 +48,7 @@ namespace MovieBookingSystem.Controllers
         }
 
         [Authorize(Roles = "User")]
-        public IActionResult User()
+        public IActionResult UserAction()
         {
             return View();
         }
