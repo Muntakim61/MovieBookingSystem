@@ -25,7 +25,7 @@ namespace MovieBookingSystem.Controllers
             string fullName = "User";
 
             // If user is logged in, try to get their full name
-            if (User.Identity.IsAuthenticated)
+            if (User.Identity?.IsAuthenticated == true)
             {
                 var user = await _context.Users
                     .FirstOrDefaultAsync(u => u.UserName == User.Identity.Name);
@@ -63,9 +63,9 @@ namespace MovieBookingSystem.Controllers
         }
 
         [Authorize(Roles = "User")]
-        public IActionResult UserAction()
+        public IActionResult UserDashboard()
         {
-            return View();
+            return View("User"); ;
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
