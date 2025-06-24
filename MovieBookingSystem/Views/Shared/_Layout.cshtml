@@ -177,31 +177,6 @@
             opacity: 1;
         }
 
-        .sidebar {
-            width: 220px;
-            min-height: 100vh;
-            transition: all 0.3s ease;
-        }
-
-        .sidebar-collapsed {
-            width: 60px !important;
-            overflow-x: hidden;
-            padding-left: 0.5rem !important;
-            padding-right: 0.5rem !important;
-        }
-
-            .sidebar-collapsed h5,
-            .sidebar-collapsed .nav-link2 {
-                display: none;
-            }
-
-        #toggleSidebar {
-            border: none;
-            font-size: 20px;
-            background: none;
-        }
-
-
     </style>
 
 
@@ -210,14 +185,22 @@
 <body class="d-flex flex-column">
     <header>
         <nav class="navbar navbar-expand-lg navbar-light bg-warning shadow-sm">
+            
             <div class="container-lg">
                 <a class="navbar-brand pacifico-regular" asp-area="" asp-controller="Home" asp-action="Index">ShowTime</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
+
                 <div class="collapse navbar-collapse justify-content-end" id="mainNavbar">
                     <ul class="navbar-nav gap-3">
+                        @* <li class="nav-item">
+                            <a class="nav-link text-dark fs-5" asp-controller="Director" asp-action="Index">SignUp</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark fs-5" asp-controller="Hall" asp-action="Index">Login</a>
+                        </li> *@
                         @if (User.IsInRole("Admin"))
                         {
                             <li class="nav-item">
@@ -227,7 +210,7 @@
                         @if (User.IsInRole("User"))
                         {
                             <li class="nav-item">
-                                <a class="nav-link" asp-controller="Home" asp-action="UserAction">Users</a>
+                                <a class="nav-link" asp-controller="Home" asp-action="User">Users</a>
                             </li>
                         }
                         <partial name="_LoginPartial" />
@@ -237,44 +220,33 @@
         </nav>
     </header>
 
-    
-
-    
     <div class="d-flex">
-        @if (User.IsInRole("Admin"))
-        {
-            <nav id="sidebar" class="sidebar bg-dark text-white p-3 sidebar-expanded">
-                <div class="d-flex justify-content-center mb-3">
-                    <button class="btn btn-outline-light" id="toggleSidebar">
-                        <span id="toggleIcon">✖</span>
-                    </button>
-                </div>
-
-                <h5 class="mb-4 pacifico-regular-2 text-white">Dashboard</h5>
-                <ul class="nav flex-column navbar-nav">
-                    <li class="nav-item mb-2">
-                        <a class="nav-link2 text-white" asp-controller="Movie" asp-action="Index">Movies</a>
-                    </li>
-                    <li class="nav-item mb-2">
-                        <a class="nav-link2 text-white" asp-controller="Hall" asp-action="Index">Halls</a>
-                    </li>
-                    <li class="nav-item mb-2">
-                        <a class="nav-link2 text-white" asp-controller="Actor" asp-action="Index">Actors</a>
-                    </li>
-                    <li class="nav-item mb-2">
-                        <a class="nav-link2 text-white" asp-controller="Director" asp-action="Index">Directors</a>
-                    </li>
-                </ul>
-            </nav>
-        }
-
-
-        <div class="container-lg min-vh-100 flex-grow-1">
+        <button class="btn btn-outline-dark me-2 d-lg-none" id="toggleSidebar">☰</button>
+        <nav id="sidebar" class="bg-dark text-white p-3" style="width: 220px; min-height: 100vh; transition: all 0.3s;">
+            <h5 class="mb-4 pacifico-regular-2 text-white">Dashboard</h5>
+            <ul class="nav flex-column navbar-nav">
+                <li class="nav-item mb-2">
+                    <a class="nav-link2 text-white" asp-controller="Movie" asp-action="Index">Movies</a>
+                </li>
+                <li class="nav-item mb-2">
+                    <a class="nav-link2 text-white" asp-controller="Hall" asp-action="Index">Halls</a>
+                </li>
+                <li class="nav-item mb-2">
+                    <a class="nav-link2 text-white" asp-controller="Actor" asp-action="Index">Actors</a>
+                </li>
+                <li class="nav-item mb-2">
+                    <a class="nav-link2 text-white" asp-controller="Director" asp-action="Index">Directors</a>
+                </li>
+            </ul>
+        </nav>
+        
+        <div class="container-lg min-vh-100">
             <main role="main">
                 @RenderBody()
             </main>
         </div>
     </div>
+
 
     <footer class="text-dark bg-warning mt-auto pt-3">
         <div class="container-lg text-center">
@@ -288,23 +260,20 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        AOS.init({
+            duration: 1000,
+            once: false
+        });
+    </script>
+    <script>
+        document.getElementById('toggleSidebar').addEventListener('click', function () {
             const sidebar = document.getElementById('sidebar');
-            const toggleBtn = document.getElementById('toggleSidebar');
-            const toggleIcon = document.getElementById('toggleIcon');
-
-            toggleBtn.addEventListener('click', function () {
-                sidebar.classList.toggle('sidebar-collapsed');
-                sidebar.classList.toggle('sidebar-expanded');
-
-                const isCollapsed = sidebar.classList.contains('sidebar-collapsed');
-                toggleIcon.textContent = isCollapsed ? '☰' : '✖';
-            });
+            sidebar.classList.toggle('d-none');
         });
     </script>
 
 
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
-
 </html>

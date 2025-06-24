@@ -1,10 +1,12 @@
+﻿using System.Diagnostics;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using MovieBookingSystem.Data;
 using MovieBookingSystem.Models;
-using System.Diagnostics;
 
 namespace MovieBookingSystem.Controllers
 {
@@ -19,20 +21,15 @@ namespace MovieBookingSystem.Controllers
             _context = context;
         }
 
-        public IActionResult Index()
+        // ✅ Updated Index method: fetch movies from database
+        public async Task<IActionResult> Index()
         {
-            string fullName = "User";
-            if (User.Identity.IsAuthenticated)
-            {
+            var movies = await _context.Movies
+                .OrderByDescending(m => m.ReleaseDate)
+                .Take(6) // You can increase or remove this limit if needed
+                .ToListAsync();
 
-                var user = _context.Users.FirstOrDefault(u => u.UserName == User.Identity.Name);
-                if (user != null)
-                {
-                    fullName = user.FullName;
-                }
-            }
-            ViewData["FullName"] = fullName;
-            return View();
+            return View(movies);
         }
 
         [Authorize]
@@ -48,7 +45,7 @@ namespace MovieBookingSystem.Controllers
         }
 
         [Authorize(Roles = "User")]
-        public IActionResult UserAction()
+        public IActionResult User()
         {
             return View();
         }
