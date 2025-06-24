@@ -200,8 +200,6 @@
             font-size: 20px;
             background: none;
         }
-
-
     </style>
 
 
@@ -212,10 +210,11 @@
         <nav class="navbar navbar-expand-lg navbar-light bg-warning shadow-sm">
             <div class="container-lg">
                 <a class="navbar-brand pacifico-regular" asp-area="" asp-controller="Home" asp-action="Index">ShowTime</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar"
-                        aria-expanded="false" aria-label="Toggle navigation">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar"
+                        aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
+
                 <div class="collapse navbar-collapse justify-content-end" id="mainNavbar">
                     <ul class="navbar-nav gap-3">
                         @if (User.IsInRole("Admin"))
@@ -227,6 +226,7 @@
                         @if (User.IsInRole("User"))
                         {
                             <li class="nav-item">
+                                @* <a class="nav-link" asp-controller="Home" asp-action="User">Users</a> *@
                                 <a class="nav-link" asp-controller="Home" asp-action="UserAction">Users</a>
                             </li>
                         }
@@ -237,14 +237,11 @@
         </nav>
     </header>
 
-    
-
-    
     <div class="d-flex">
         @if (User.IsInRole("Admin"))
         {
             <nav id="sidebar" class="sidebar bg-dark text-white p-3 sidebar-expanded">
-                <div class="d-flex justify-content-center mb-3">
+                <div class="d-flex justify-content-end mb-3">
                     <button class="btn btn-outline-light" id="toggleSidebar">
                         <span id="toggleIcon">✖</span>
                     </button>
@@ -268,7 +265,6 @@
             </nav>
         }
 
-
         <div class="container-lg min-vh-100 flex-grow-1">
             <main role="main">
                 @RenderBody()
@@ -288,6 +284,8 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
     <script>
+        AOS.init({ duration: 1000, once: false });
+
         document.addEventListener('DOMContentLoaded', function () {
             const sidebar = document.getElementById('sidebar');
             const toggleBtn = document.getElementById('toggleSidebar');
@@ -296,15 +294,13 @@
             toggleBtn.addEventListener('click', function () {
                 sidebar.classList.toggle('sidebar-collapsed');
                 sidebar.classList.toggle('sidebar-expanded');
-
-                const isCollapsed = sidebar.classList.contains('sidebar-collapsed');
-                toggleIcon.textContent = isCollapsed ? '☰' : '✖';
+                toggleIcon.textContent = sidebar.classList.contains('sidebar-collapsed') ? '☰' : '✖';
             });
         });
     </script>
 
-
     @await RenderSectionAsync("Scripts", required: false)
 </body>
+
 
 </html>

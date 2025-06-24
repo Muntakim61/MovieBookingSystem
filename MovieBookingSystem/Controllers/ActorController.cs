@@ -55,7 +55,7 @@ namespace MovieBookingSystem.Controllers
                     actorId = reader.GetInt32(0),
                     name = reader.GetString(1),
                     biography = reader.GetString(2),
-                    dateOfBirth = reader.GetString(3),
+                    dateOfBirth = reader.GetDateTime(3).ToString("yyyy-MM-dd"),
                     imageUrl = reader.GetString(4)
                 });
             }

@@ -1,17 +1,17 @@
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MovieBookingSystem.Data;
 using MovieBookingSystem.Models;
+using MovieBookingSystem.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services
+
 builder.Services.AddControllersWithViews()
        .AddRazorRuntimeCompilation();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-
 
 builder.Services.AddIdentity<Users, IdentityRole>(options =>
 {
@@ -26,10 +26,20 @@ builder.Services.AddIdentity<Users, IdentityRole>(options =>
     .AddEntityFrameworkStores<AppDbContext>()
     .AddDefaultTokenProviders();
 
-
 var app = builder.Build();
 
-// Configure HTTP request pipeline
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+
+    
+    await SeedService.SeedDatabase(services);
+
+    
+    await DataSeeder.SeedDataAsync(services);
+}
+
+
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");

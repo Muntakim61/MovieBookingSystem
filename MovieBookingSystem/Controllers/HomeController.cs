@@ -19,21 +19,36 @@ namespace MovieBookingSystem.Controllers
             _context = context;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
+            // Default name
             string fullName = "User";
+
+            // If user is logged in, try to get their full name
             if (User.Identity.IsAuthenticated)
             {
+                var user = await _context.Users
+                    .FirstOrDefaultAsync(u => u.UserName == User.Identity.Name);
 
-                var user = _context.Users.FirstOrDefault(u => u.UserName == User.Identity.Name);
                 if (user != null)
                 {
                     fullName = user.FullName;
                 }
             }
+
+            // Pass FullName to View
             ViewData["FullName"] = fullName;
-            return View();
+
+            // Get latest 6 movies
+            var movies = await _context.Movies
+                .OrderByDescending(m => m.ReleaseDate)
+                .Take(6)
+                .ToListAsync();
+
+            // Pass movies list to View
+            return View(movies);
         }
+
 
         [Authorize]
         public IActionResult Privacy()
