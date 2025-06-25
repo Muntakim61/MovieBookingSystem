@@ -57,9 +57,9 @@
         @if (!isLoggedIn)
         {
             
-            <h1 class="display-3 fw-bold mb-3">Welcome to ShowTime 🎬</h1>
+            <h1 class="display-3 fw-bold mb-3">Welcome to ShowTime </h1>
             <p class="lead">Join us to experience effortless movie booking & the joy of cinema!</p>
-            <a class="btn btn-warning btn-lg mt-3 text-dark fw-semibold" href="/Identity/Account/Login">Login to Start</a>
+            <a class="btn btn-warning btn-lg mt-3 text-dark fw-semibold" href="/Account/Login">Login to Start</a>
         }
         else if (isUser)
         {
@@ -97,7 +97,10 @@
                             <h5 class="card-title" style="font-weight: 600;">@movie.Title (@movie.ReleaseDate.Year)</h5>
                             <p class="card-text text-light" style="font-size: 0.95rem;">@movie.Genre</p>
                             <p class="card-text text-light" style="font-size: 0.9rem;">Price: $@movie.Price</p>
-                            <a href="@Url.Action("Details", "Movie", new { id = movie.MovieId })" class="btn btn-warning mt-auto" style="border-radius: 25px;">🎟 Book Now</a>
+                            @* <a href="@Url.Action("Details", "Movie", new { id = movie.MovieId })" class="btn btn-warning mt-auto disabled" style="border-radius: 25px;">🎟 Book Now</a> *@
+                            <a asp-controller="Booking" asp-action="Create" asp-route-movieId="@movie.MovieId" class="btn btn-warning">
+                                Book Now
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -166,4 +169,11 @@
         once: true
     });
 </script>
-    
+@if (TempData["BookingError"] != null)
+{
+    <script>
+        window.onload = function () {
+            alert("@TempData["BookingError"]");
+        };
+    </script>
+}

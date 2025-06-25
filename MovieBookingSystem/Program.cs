@@ -6,7 +6,6 @@ using MovieBookingSystem.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
 builder.Services.AddControllersWithViews()
        .AddRazorRuntimeCompilation();
 
@@ -26,19 +25,17 @@ builder.Services.AddIdentity<Users, IdentityRole>(options =>
     .AddEntityFrameworkStores<AppDbContext>()
     .AddDefaultTokenProviders();
 
+builder.Services.AddScoped<BookingService>();
+
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
 
-    
     await SeedService.SeedDatabase(services);
-
-    
     await DataSeeder.SeedDataAsync(services);
 }
-
 
 if (!app.Environment.IsDevelopment())
 {

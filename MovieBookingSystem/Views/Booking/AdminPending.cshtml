@@ -1,0 +1,64 @@
+﻿@model IEnumerable<MovieBookingSystem.Models.Booking>
+
+@{
+    ViewData["Title"] = "Pending Bookings (Admin)";
+}
+
+<div class="container my-5">
+    <h2 class="mb-4 text-primary fw-bold">@ViewData["Title"]</h2>
+
+    <div class="card shadow-sm rounded-4">
+        <div class="card-body p-4">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th scope="col">User</th>
+                            <th scope="col">Movie</th>
+                            <th scope="col">Hall</th>
+                            <th scope="col" class="text-center">Seats</th>
+                            <th scope="col">Booking Date</th>
+                            <th scope="col" class="text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (!Model.Any())
+                        {
+                            <tr>
+                                <td colspan="6" class="text-center text-muted py-4">
+                                    No pending bookings at the moment.
+                                </td>
+                            </tr>
+                        }
+                        else
+                        {
+                            foreach (var booking in Model)
+                            {
+                                <tr>
+                                    <td>@booking.User?.FullName</td>
+                                    <td>@booking.Movie?.Title</td>
+                                    <td>@booking.Hall?.Name</td>
+                                    <td class="text-center">@booking.SeatCount</td>
+                                    <td>@booking.BookingDate.ToString("f")</td>
+                                    <td class="text-center">
+                                        <form asp-action="Approve" asp-route-id="@booking.BookingId" method="post" class="d-inline">
+                                            <button type="submit" class="btn btn-sm btn-success me-2" title="Approve booking">
+                                                <i class="bi bi-check-lg"></i> Approve
+                                            </button>
+                                        </form>
+                                        <form asp-action="Reject" asp-route-id="@booking.BookingId" method="post" class="d-inline">
+                                            <button type="submit" class="btn btn-sm btn-danger" title="Reject booking">
+                                                <i class="bi bi-x-lg"></i> Reject
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+

@@ -44,11 +44,13 @@
 
         
         <div class="col-md-4">
-            <div class="bg-dark text-white p-4 rounded-3 text-center dashboard-card disabled">
-                <div class="dashboard-icon">📅</div>
-                <h5 class="fw-bold">My Bookings</h5>
-                <p class="mb-0">Coming soon</p>
-            </div>
+            <a asp-controller="Booking" asp-action="UserBookings" class="text-decoration-none">
+                <div class="bg-warning text-dark p-4 rounded-3 text-center dashboard-card">
+                    <div class="dashboard-icon">📅</div>
+                    <h5 class="fw-bold">My Bookings</h5>
+                    <p class="mb-0">View your bookings</p>
+                </div>
+            </a>
         </div>
 
         

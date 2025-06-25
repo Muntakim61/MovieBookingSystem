@@ -9,9 +9,8 @@ namespace MovieBookingSystem.Data
     {
         public AppDbContext CreateDbContext(string[] args)
         {
-            // Build config to read connection string from appsettings.json
             IConfigurationRoot configuration = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory()) // ensure it runs in project dir
+                .SetBasePath(Directory.GetCurrentDirectory()) 
                 .AddJsonFile("appsettings.json")
                 .Build();
 

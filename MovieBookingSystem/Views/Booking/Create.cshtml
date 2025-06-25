@@ -1,0 +1,102 @@
+﻿@model MovieBookingSystem.Models.Booking
+
+@{
+    ViewData["Title"] = "Book Your Seats";
+}
+
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow-lg border-0 rounded-4">
+                <div class="card-header bg-dark text-white text-center rounded-top-4">
+                    <h3 class="mb-0">@ViewData["Title"]</h3>
+                </div>
+                <div class="card-body p-4 bg-light">
+                    <form asp-action="Create" method="post" class="needs-validation" novalidate>
+                        @Html.AntiForgeryToken()
+                        <div class="mb-3">
+                            <label asp-for="MovieId" class="form-label fw-semibold"> Select Movie</label>
+                            <select asp-for="MovieId" class="form-select" asp-items="ViewBag.Movies" required>
+                                <option value="">-- Select Movie --</option>
+                            </select>
+                            <div class="invalid-feedback">Please select a movie.</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="HallId" class="form-label fw-semibold"> Select Hall</label>
+                            <select asp-for="HallId" class="form-select" asp-items="ViewBag.Halls" required>
+                                <option value="">-- Select Hall --</option>
+                            </select>
+                            <div class="invalid-feedback">Please select a hall.</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="SeatCount" class="form-label fw-semibold"> Number of Seats</label>
+                            <input asp-for="SeatCount" class="form-control" min="1" required />
+                            <span asp-validation-for="SeatCount" class="text-danger"></span>
+                        </div>
+
+                        <div class="d-grid mt-4">
+                            <button type="submit" class="btn btn-warning btn-lg fw-bold text-dark shadow-sm">
+                                Confirm Booking
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Error Modal -->
+@if (TempData["BookingError"] != null)
+{
+    <div class="modal fade show" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-modal="true" style="display:block;">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-danger">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title" id="errorModalLabel">Booking Error</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="closeErrorModal()"></button>
+                </div>
+                <div class="modal-body">
+                    @TempData["BookingError"]
+                </div>
+                <div class="modal-footer">
+                    <a href="~/Home/Index" class="btn btn-danger">Go to Homepage</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function closeErrorModal() {
+            var modal = document.getElementById('errorModal');
+            modal.style.display = 'none';
+            modal.classList.remove('show');
+        }
+        // Optional: prevent background scroll while modal visible
+        document.body.style.overflow = 'hidden';
+    </script>
+}
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        // Bootstrap validation styling
+        document.addEventListener("DOMContentLoaded", function () {
+            const forms = document.querySelectorAll('.needs-validation');
+            if (forms.length > 0) {
+                Array.from(forms).forEach(form => {
+                    form.addEventListener('submit', function (event) {
+                        if (!form.checkValidity()) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                        }
+                        form.classList.add('was-validated');
+                    }, false);
+                });
+            }
+        });
+    </script>
+}
