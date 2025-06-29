@@ -1,0 +1,20 @@
+﻿@{
+    ViewData["Title"] = "Access Denied";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container d-flex align-items-center justify-content-center vh-100">
+    <div class="text-center border rounded-4 shadow-lg p-5 bg-light" style="max-width: 600px;">
+        <img src="https://cdn-icons-png.flaticon.com/512/595/595067.png" alt="Access Denied" width="100" class="mb-4" />
+        <h1 class="display-5 text-danger mb-3">Access Denied</h1>
+        <p class="lead text-muted mb-4">
+            You do not have the necessary permissions to access this page.<br />
+            Please contact an administrator if you believe this is an error.
+        </p>
+
+        <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+            <a href="@Url.Action("Index", "Home")" class="btn btn-warning fw-bold px-4 py-2">Return to Homepage</a>
+            <a href="@Url.Action("Login", "Account")" class="btn btn-outline-secondary px-4 py-2">Login as Different User</a>
+        </div>
+    </div>
+</div>

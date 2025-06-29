@@ -3,46 +3,6 @@
 }
 
 @{
-    var popularMovies = new[]
-    {
-        new {
-            Title = "Dune: Part Two",
-            Poster = "https://i.ibb.co/5XTf9JGQ/DUNE-2.webp",
-            Description = "Paul Atreides unites with Chani and the Fremen while seeking revenge.",
-            Year = "2024"
-        },
-        new {
-            Title = "Spider-Man: No Way Home",
-            Poster = "https://i.ibb.co/mVGfh4f2/NWH.jpg",
-            Description = "Peter Parker faces multiversal enemies and secrecy issues.",
-            Year = "2021"
-        },
-        new {
-            Title = "Luca",
-            Poster = "https://i.ibb.co/Y79qq5Zd/LUCA.jpg",
-            Description = "A boy shares an unforgettable summer filled with secrets.",
-            Year = "2021"
-        },
-        new {
-            Title = "Oppenheimer",
-            Poster = "https://i.ibb.co/pvdZmDWv/oppenheimer-movie-poster.jpg",
-            Description = "The story of J. Robert Oppenheimer and the atomic bomb.",
-            Year = "2023"
-        },
-        new {
-            Title = "Top Gun: Maverick",
-            Poster = "https://i.ibb.co/Rk0qY3cX/TGM.jpg",
-            Description = "Maverick trains a new generation of pilots.",
-            Year = "2022"
-        },
-        new {
-            Title = "Inside Out 2",
-            Poster = "https://i.ibb.co/qFDhgdM3/Inside-Out-2-poster.jpg",
-            Description = "Riley deals with teenage emotions in this Pixar sequel.",
-            Year = "2024"
-        }
-    };
-
     var isAdmin = User.IsInRole("Admin");
     var isUser = User.IsInRole("User");
     var isLoggedIn = User.Identity?.IsAuthenticated ?? false;
@@ -66,8 +26,7 @@
 
             <h1 class="display-3 fw-bold mb-3">Welcome Back, @ViewData["FullName"]</h1>
             <p class="lead">Your next cinematic adventure is just a click away.</p>
-            //<a class="btn btn-warning btn-lg mt-3 text-dark fw-semibold" href="/Movie/Index">Browse Movies</a>
-            <a class="btn btn-outline-light btn-lg mt-3 ms-2 fw-semibold disabled" href="/Booking/MyBookings">My Bookings</a>
+            <a class="btn btn-outline-light btn-lg mt-3 ms-2 fw-semibold " href="/Booking/UserBookings">My Bookings</a>
         }
         else if (isAdmin)
         {
@@ -98,9 +57,10 @@
                             <p class="card-text text-light" style="font-size: 0.95rem;">@movie.Genre</p>
                             <p class="card-text text-light" style="font-size: 0.9rem;">Price: $@movie.Price</p>
                             @* <a href="@Url.Action("Details", "Movie", new { id = movie.MovieId })" class="btn btn-warning mt-auto disabled" style="border-radius: 25px;">🎟 Book Now</a> *@
-                            <a asp-controller="Booking" asp-action="Create" asp-route-movieId="@movie.MovieId" class="btn btn-warning">
+                            @* <a asp-controller="Booking" asp-action="Create" asp-route-movieId="@movie.MovieId" class="btn btn-warning">
                                 Book Now
-                            </a>
+                            </a> *@
+                            <a asp-controller="Movie" asp-action="Details" asp-route-id="@movie.MovieId" class="btn btn-warning">View Details</a>
                         </div>
                     </div>
                 </div>
@@ -146,34 +106,89 @@
         <h2 class="text-center mb-3 display-5" style="font-family: 'Cinzel', serif; letter-spacing: 2px;">Join the ShowTime Club</h2>
         <p class="text-center mb-4 fs-5">Get the latest movie releases, trailers & exclusive updates—right in your inbox!</p>
 
-        <form method="post" class="row justify-content-center align-items-center g-3">
-            
+        <form asp-action="SubscribeNewsletter" asp-controller="Home" method="post" class="row justify-content-center align-items-center g-3">
+            @Html.AntiForgeryToken()
+
             <div class="col-12 col-md-7 col-lg-6">
                 <input type="email" class="form-control form-control-lg rounded-3 shadow-sm border-0"
                        name="email" placeholder="Enter your email" required>
             </div>
 
-            
             <div class="col-12 col-md-5 col-lg-3 d-grid">
                 <button type="submit" class="btn btn-warning btn-lg rounded-3 shadow">Subscribe for Updates</button>
             </div>
         </form>
+
+
     </div>
 </section>
 
 
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
 <script>
-    aos.init({
+    AOS.init({
         duration: 1000,
-        once: true
+        once: false, 
+        mirror: false
     });
 </script>
+<script>
+    window.addEventListener('load', function () {
+        setTimeout(function () {
+            // Remove AOS animation attributes from all elements
+            document.querySelectorAll('[data-aos]').forEach(function (el) {
+                el.removeAttribute('data-aos');
+                el.removeAttribute('data-aos-duration');
+                el.removeAttribute('data-aos-delay');
+                el.style.opacity = 1; // ensure they remain visible
+                el.style.transform = 'none'; // reset transformation
+            });
+
+            // Optionally destroy AOS observers
+            if (AOS) AOS.refreshHard();
+        }, 1500); // Wait until animations likely completed
+    });
+</script>
+
+
+
+
+@section Scripts {
+    @if (TempData["ToastMessage"] != null)
+    {
+        <script>
+            $(document).ready(function () {
+                toastr.options = {
+                    "closeButton": true,
+                    "progressBar": true,
+                    "positionClass": "toast-top-right",
+                    "timeOut": "5000",
+                    "showMethod": "fadeIn",
+                    "hideMethod": "fadeOut"
+                };
+
+                toastr["@TempData["ToastType"]"]("@TempData["ToastMessage"]");
+            });
+        </script>
+    }
+}
+
 @if (TempData["BookingError"] != null)
 {
     <script>
         window.onload = function () {
             alert("@TempData["BookingError"]");
+        };
+    </script>
+}
+@if (TempData["NewsletterMessage"] != null)
+{
+    <script>
+        window.onload = function () {
+            alert("@TempData["NewsletterMessage"]");
         };
     </script>
 }

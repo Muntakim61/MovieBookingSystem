@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MovieBookingSystem.Data;
 using MovieBookingSystem.Models;
@@ -11,6 +12,16 @@ builder.Services.AddControllersWithViews()
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.Configure<CookieAuthenticationOptions>(IdentityConstants.ApplicationScheme, options =>
+{
+    options.AccessDeniedPath = "/Error/AccessDenied"; 
+});
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.AccessDeniedPath = "/Error/AccessDenied";
+});
+
 
 builder.Services.AddIdentity<Users, IdentityRole>(options =>
 {

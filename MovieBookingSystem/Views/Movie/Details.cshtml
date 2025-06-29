@@ -1,0 +1,61 @@
+﻿@model MovieBookingSystem.Models.Movie
+
+@{
+    ViewData["Title"] = "Movie Details";
+    Layout = "~/Views/Shared/_AccountLayout.cshtml"; // or _Layout.cshtml for main site
+}
+
+<div class="account-container">
+    <div class="account-box shadow-lg p-4">
+        <!-- Centered poster on top -->
+        <div class="text-center mb-4">
+            <img src="@Model.ImageUrl" alt="@Model.Title" class="img-fluid rounded shadow-sm" style="max-height: 400px; object-fit: cover;" />
+        </div>
+
+        <h2 class="text-center text-dark fw-bold mb-4">@Model.Title</h2>
+
+        <ul class="list-group list-group-flush mb-4 mx-auto" style="max-width: 600px;">
+            <li class="list-group-item d-flex justify-content-between">
+                <span><strong>Genre:</strong></span>
+                <span>@Model.Genre</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between">
+                <span><strong>Release Date:</strong></span>
+                <span>@Model.ReleaseDate.ToString("yyyy-MM-dd")</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between">
+                <span><strong>Duration:</strong></span>
+                <span>@Model.Duration mins</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between">
+                <span><strong>Price:</strong></span>
+                <span>$@Model.Price</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between">
+                <span><strong>Director:</strong></span>
+                <span>@(Model.Director?.Name ?? "Not Assigned")</span>
+            </li>
+            <li class="list-group-item">
+                <strong>Cast:</strong>
+                @if (Model.MovieActors != null && Model.MovieActors.Any())
+                {
+                    @string.Join(", ", Model.MovieActors.Select(ma => ma.Actor.Name))
+                }
+                else
+                {
+                    <span>No cast information</span>
+                }
+            </li>
+        </ul>
+
+        <div class="d-flex justify-content-center gap-3">
+            <a asp-controller="Booking" asp-action="Create" asp-route-movieId="@Model.MovieId" class="btn btn-warning fw-semibold text-dark px-4 py-2">
+                Book Now
+            </a>
+
+            <a asp-action="Index" asp-controller="Home" class="btn btn-outline-secondary fw-semibold px-4 py-2">
+                Back to Movies
+            </a>
+        </div>
+    </div>
+</div>

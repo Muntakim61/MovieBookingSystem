@@ -6,6 +6,9 @@ using MovieBookingSystem.Models;
 using System.Linq;
 using System.Threading.Tasks;
 using System;
+using Microsoft.AspNetCore.Authorization;
+
+
 
 namespace MovieBookingSystem.Controllers
 {
@@ -24,7 +27,7 @@ namespace MovieBookingSystem.Controllers
             return View();
         }
 
-        // GET: /Movie/Create
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public IActionResult Create()
         {
@@ -48,7 +51,7 @@ namespace MovieBookingSystem.Controllers
             return View(vm);
         }
 
-        // POST: /Movie/Create
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CreateMovieViewModel vm)
@@ -95,7 +98,7 @@ namespace MovieBookingSystem.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: /Movie/GetMovies
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<IActionResult> GetMovies()
         {
@@ -121,7 +124,7 @@ namespace MovieBookingSystem.Controllers
             return Json(movieList);
         }
 
-        // POST: /Movie/SaveMovie
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> SaveMovie([FromBody] Movie movie)
         {
@@ -138,7 +141,25 @@ namespace MovieBookingSystem.Controllers
             return Json(new { success = true });
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+                return NotFound();
 
+            var movie = await _context.Movies
+                .Include(m => m.Director)
+                .Include(m => m.MovieActors)
+                    .ThenInclude(ma => ma.Actor)
+                .FirstOrDefaultAsync(m => m.MovieId == id);
+
+            if (movie == null)
+                return NotFound();
+
+            return View(movie);
+        }
+
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<IActionResult> Edit(int? id)
         {
@@ -153,7 +174,7 @@ namespace MovieBookingSystem.Controllers
             return View(movie);
         }
 
-        // POST: /Movie/DeleteMovie
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> DeleteMovie([FromBody] int id)
         {
@@ -171,7 +192,7 @@ namespace MovieBookingSystem.Controllers
             return Json(new { success = true });
         }
 
-        // POST: /Movie/Edit
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(MovieEditViewModel vm)

@@ -21,10 +21,8 @@ namespace MovieBookingSystem.Controllers
 
         public async Task<IActionResult> Index()
         {
-            // Default name
             string fullName = "User";
 
-            // If user is logged in, try to get their full name
             if (User.Identity?.IsAuthenticated == true)
             {
                 var user = await _context.Users
@@ -35,17 +33,14 @@ namespace MovieBookingSystem.Controllers
                     fullName = user.FullName;
                 }
             }
-
-            // Pass FullName to View
+       
             ViewData["FullName"] = fullName;
-
-            // Get latest 6 movies
+          
             var movies = await _context.Movies
                 .OrderByDescending(m => m.ReleaseDate)
                 .Take(6)
                 .ToListAsync();
 
-            // Pass movies list to View
             return View(movies);
         }
 
@@ -77,6 +72,25 @@ namespace MovieBookingSystem.Controllers
             };
             return View(errorModel);
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult SubscribeNewsletter(string email)
+        {
+            if (string.IsNullOrWhiteSpace(email))
+            {
+                TempData["ToastMessage"] = "Please enter a valid email address.";
+                TempData["ToastType"] = "error";
+            }
+            else
+            {
+                TempData["ToastMessage"] = "Thank you for subscribing!";
+                TempData["ToastType"] = "success";
+            }
+
+            return RedirectToAction("Index");
+        }
+
 
         public IActionResult TestDb()
         {
