@@ -61,8 +61,8 @@
                                     foreach (var booking in Model.Where(b => b.Status == MovieBookingSystem.Models.BookingStatus.Pending))
                                     {
                                         <tr>
-                                            <td>@booking.Movie?.Title "<em>Unknown</em>"</td>
-                                            <td>@booking.Hall?.Name "<em>Unknown</em>"</td>
+                                            <td>@booking.Movie?.Title</td>
+                                            <td>@booking.Hall?.Name</td>
                                             <td class="text-center">@booking.SeatCount</td>
                                             <td>@booking.BookingDate.ToString("f")</td>
                                             <td>
@@ -117,8 +117,8 @@
                                     foreach (var booking in Model.Where(b => b.Status == MovieBookingSystem.Models.BookingStatus.Confirmed))
                                     {
                                         <tr>
-                                            <td>@booking.Movie?.Title ?? "<em>Unknown</em>"</td>
-                                            <td>@booking.Hall?.Name ?? "<em>Unknown</em>"</td>
+                                            <td>@booking.Movie?.Title</td>
+                                            <td>@booking.Hall?.Name</td>
                                             <td class="text-center">@booking.SeatCount</td>
                                             <td>@booking.BookingDate.ToString("f")</td>
                                             <td>

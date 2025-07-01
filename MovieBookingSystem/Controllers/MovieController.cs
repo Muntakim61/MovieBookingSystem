@@ -1,12 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MovieBookingSystem.Data;
 using MovieBookingSystem.Models;
+using System;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
-using System;
-using Microsoft.AspNetCore.Authorization;
 
 
 
@@ -21,7 +22,7 @@ namespace MovieBookingSystem.Controllers
             _context = context;
         }
 
-        // GET: /Movie/Index
+        [Authorize(Roles = "Admin")]
         public IActionResult Index()
         {
             return View();
@@ -98,31 +99,61 @@ namespace MovieBookingSystem.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+
         [Authorize(Roles = "Admin")]
         [HttpGet]
-        public async Task<IActionResult> GetMovies()
+        public async Task<IActionResult> GetMovies(int page = 1, int size = 10)
         {
-            var movies = await _context.Movies
-                .Include(m => m.Director)
-                .Include(m => m.MovieActors)
-                    .ThenInclude(ma => ma.Actor)
-                .ToListAsync();
+            using var connection = _context.Database.GetDbConnection();
+            await connection.OpenAsync();
 
-            var movieList = movies.Select(m => new
+            using var command = connection.CreateCommand();
+            command.CommandText = "GetMoviesPaged";
+            command.CommandType = CommandType.StoredProcedure;
+
+            var paramPage = command.CreateParameter();
+            paramPage.ParameterName = "@PageNumber";
+            paramPage.Value = page;
+            command.Parameters.Add(paramPage);
+
+            var paramSize = command.CreateParameter();
+            paramSize.ParameterName = "@PageSize";
+            paramSize.Value = size;
+            command.Parameters.Add(paramSize);
+
+            using var reader = await command.ExecuteReaderAsync();
+
+            var movies = new List<object>();
+            while (await reader.ReadAsync())
             {
-                m.MovieId,
-                m.Title,
-                m.Genre,
-                m.ReleaseDate,
-                m.ImageUrl,
-                m.Duration,
-                m.Price,
-                DirectorName = m.Director.Name,
-                ActorIds = m.MovieActors.Select(ma => ma.ActorId)
-            });
+                movies.Add(new
+                {
+                    movieId = reader.GetInt32(0),
+                    title = reader.GetString(1),
+                    genre = reader.GetString(2),
+                    releaseDate = reader.GetDateTime(3).ToString("yyyy-MM-dd"),
+                    imageUrl = reader.IsDBNull(4) ? null : reader.GetString(4),
+                    duration = reader.GetInt32(5),
+                    price = reader.GetDecimal(6),
+                    directorName = reader.IsDBNull(7) ? null : reader.GetString(7)
+                });
+            }
 
-            return Json(movieList);
+            await reader.NextResultAsync();
+
+            int totalCount = 0;
+            if (await reader.ReadAsync())
+            {
+                totalCount = reader.GetInt32(0);
+            }
+
+            return Json(new
+            {
+                data = movies,
+                last_page = (int)Math.Ceiling((double)totalCount / size)
+            });
         }
+
 
         [Authorize(Roles = "Admin")]
         [HttpPost]

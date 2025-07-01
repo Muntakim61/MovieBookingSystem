@@ -218,23 +218,44 @@
                 </button>
 
                 <div class="collapse navbar-collapse justify-content-end" id="mainNavbar">
-                    <ul class="navbar-nav gap-3">
+                    <ul class="navbar-nav gap-3 align-items-center">
+
+                        @* @if (User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item">
+                                <span class="navbar-text fw-bold">
+                                    Hello, @(
+                                    !string.IsNullOrWhiteSpace(ViewData["FullName"] as string)
+                                    ? ViewData["FullName"]: "User")
+                            </span>
+                        </li>
+                        } *@
+
                         @if (User.IsInRole("Admin"))
                         {
                             <li class="nav-item">
-                                <a class="nav-link" asp-controller="Home" asp-action="Admin">Admin</a>
-                            </li>
-                        }
+                                <a class="nav-link" asp-controller="Home" asp-action="Admin">
+                                    @(!string.IsNullOrWhiteSpace(ViewData["FullName"] as string)
+                                      ? ViewData["FullName"] : "Admin")
+                            </a>
+                        </li>
+                     }
+
                         @if (User.IsInRole("User"))
                         {
                             <li class="nav-item">
-                                @* <a class="nav-link" asp-controller="Home" asp-action="User">Users</a> *@
-                                <a class="nav-link" asp-controller="Home" asp-action="UserDashboard">Users</a>
-                            </li>
-                        }
+                                <a class="nav-link" asp-controller="" asp-action="UserDashboard">
+                                    @(!string.IsNullOrWhiteSpace(ViewData["FullName"] as string)
+                                      ? ViewData["FullName"]: "User")
+                            </a>
+                        </li>
+                     }
+
                         <partial name="_LoginPartial" />
                     </ul>
                 </div>
+
+
             </div>
         </nav>
     </header>

@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -12,12 +13,14 @@ namespace MovieBookingSystem.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly AppDbContext _context;
-
-        public HomeController(ILogger<HomeController> logger, AppDbContext context)
+        private readonly UserManager<Users> _userManager;
+        public HomeController(ILogger<HomeController> logger, AppDbContext context, UserManager<Users> userManager)
         {
             _logger = logger;
             _context = context;
+            _userManager = userManager;
         }
+        
 
         public async Task<IActionResult> Index()
         {
@@ -52,15 +55,19 @@ namespace MovieBookingSystem.Controllers
         }
 
         [Authorize(Roles = "Admin")]
-        public IActionResult Admin()
+        public async Task<IActionResult> Admin()
         {
-            return View();
+            var user = await _userManager.GetUserAsync(User);
+            ViewData["FullName"] = user?.FullName ?? "Admin";
+            return View("Admin");
         }
 
         [Authorize(Roles = "User")]
-        public IActionResult UserDashboard()
+        public async Task<IActionResult> UserDashboard()
         {
-            return View("User"); ;
+            var user = await _userManager.GetUserAsync(User);
+            ViewData["FullName"] = user?.FullName ?? "User";
+            return View("User");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
