@@ -80,6 +80,38 @@ namespace MovieBookingSystem.Controllers
             return View(hall);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> DownloadExcel()
+        {
+            var halls = await _context.Halls.ToListAsync();
+
+            using var workbook = new ClosedXML.Excel.XLWorkbook();
+            var worksheet = workbook.Worksheets.Add("Halls");
+
+            // Header
+            worksheet.Cell(1, 1).Value = "Name";
+            worksheet.Cell(1, 2).Value = "Capacity";
+            worksheet.Cell(1, 3).Value = "Location";
+
+            // Data
+            for (int i = 0; i < halls.Count; i++)
+            {
+                var h = halls[i];
+                worksheet.Cell(i + 2, 1).Value = h.Name;
+                worksheet.Cell(i + 2, 2).Value = h.Capacity;
+                worksheet.Cell(i + 2, 3).Value = h.Location;
+            }
+
+            using var stream = new MemoryStream();
+            workbook.SaveAs(stream);
+            stream.Seek(0, SeekOrigin.Begin);
+
+            return File(stream.ToArray(),
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                "Halls.xlsx");
+        }
+
+
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

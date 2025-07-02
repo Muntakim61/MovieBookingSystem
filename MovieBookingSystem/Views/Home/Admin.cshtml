@@ -34,8 +34,8 @@
 
         
         <div class="col-md-4">
-            <a asp-controller="Movies" asp-action="Index" class="text-decoration-none">
-                <div class="bg-warning text-dark p-4 rounded-3 text-center dashboard-card disabled">
+            <a asp-controller="Movie" asp-action="Index" class="text-decoration-none">
+                <div class="bg-warning text-dark p-4 rounded-3 text-center dashboard-card ">
                     <div class="dashboard-icon">🎞️</div>
                     <h5 class="fw-bold">Manage Movies</h5>
                     <p class="mb-0">Add, edit or remove movies</p>
@@ -45,8 +45,8 @@
 
         
         <div class="col-md-4">
-            <a asp-controller="Halls" asp-action="Index" class="text-decoration-none">
-                <div class="bg-warning text-dark p-4 rounded-3 text-center dashboard-card disabled">
+            <a asp-controller="Hall" asp-action="Index" class="text-decoration-none">
+                <div class="bg-warning text-dark p-4 rounded-3 text-center dashboard-card ">
                     <div class="dashboard-icon">🏟️</div>
                     <h5 class="fw-bold">Manage Halls</h5>
                     <p class="mb-0">Configure cinema halls and seating</p>
@@ -56,16 +56,19 @@
 
         
         <div class="col-md-4">
-            <div class="bg-dark text-white p-4 rounded-3 text-center dashboard-card disabled">
+            <div class="bg-dark text-white p-4 rounded-3 text-center dashboard-card ">
                 <div class="dashboard-icon">📅</div>
                 <h5 class="fw-bold">Manage Bookings</h5>
                 <p class="mb-0">Coming soon</p>
             </div>
+            @* <a asp-action="Index" asp-controller="Booking"> *@
+
+            @* </a> *@
         </div>
 
         
         <div class="col-md-4">
-            <div class="bg-secondary text-white p-4 rounded-3 text-center dashboard-card disabled">
+            <div class="bg-secondary text-white p-4 rounded-3 text-center dashboard-card">
                 <div class="dashboard-icon">👥</div>
                 <h5 class="fw-bold">Manage User Roles</h5>
                 <p class="mb-0">Coming soon</p>

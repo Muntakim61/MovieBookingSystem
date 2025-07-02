@@ -18,10 +18,11 @@ namespace MovieBookingSystem.Controllers
             _context = context;
         }
 
-        // GET: /Movie/Index
-        public IActionResult Index()
+        // ✅ UPDATED to send movie list to Index view
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var movies = await _context.Movies.Include(m => m.Director).ToListAsync();
+            return View(movies);
         }
 
         // GET: /Movie/Create
@@ -138,20 +139,50 @@ namespace MovieBookingSystem.Controllers
             return Json(new { success = true });
         }
 
-
+        [HttpGet]
         [HttpGet]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
                 return NotFound();
 
-            var movie = await _context.Movies.FindAsync(id);
+            var movie = await _context.Movies
+                .Include(m => m.MovieActors)
+                .FirstOrDefaultAsync(m => m.MovieId == id);
 
             if (movie == null)
                 return NotFound();
 
-            return View(movie);
+            var vm = new MovieEditViewModel
+            {
+                MovieId = movie.MovieId,
+                Title = movie.Title,
+                Genre = movie.Genre,
+                ReleaseDate = movie.ReleaseDate,
+                Duration = movie.Duration,
+                Price = movie.Price,
+                ImageUrl = movie.ImageUrl,
+                SelectedDirectorId = movie.DirectorId ?? 0,
+                SelectedActorIds = movie.MovieActors?.Select(ma => ma.ActorId).ToList(),
+
+                Directors = _context.Directors.Select(d => new SelectListItem
+                {
+                    Value = d.DirectorId.ToString(),
+                    Text = d.Name
+                }).ToList(),
+
+                Actors = _context.Actors.Select(a => new SelectListItem
+                {
+                    Value = a.ActorId.ToString(),
+                    Text = a.Name
+                }).ToList()
+            };
+
+            return View(vm);
         }
+
+
+
 
         // POST: /Movie/DeleteMovie
         [HttpPost]
@@ -170,6 +201,51 @@ namespace MovieBookingSystem.Controllers
 
             return Json(new { success = true });
         }
+
+        // GET: /Movie/DownloadExcel
+        [HttpGet]
+        public async Task<IActionResult> DownloadExcel()
+        {
+            var movies = await _context.Movies
+                .Include(m => m.Director)
+                .Include(m => m.MovieActors)
+                    .ThenInclude(ma => ma.Actor)
+                .ToListAsync();
+
+            using var workbook = new ClosedXML.Excel.XLWorkbook();
+            var worksheet = workbook.Worksheets.Add("Movies");
+
+            // Header
+            worksheet.Cell(1, 1).Value = "Title";
+            worksheet.Cell(1, 2).Value = "Genre";
+            worksheet.Cell(1, 3).Value = "Release Date";
+            worksheet.Cell(1, 4).Value = "Duration";
+            worksheet.Cell(1, 5).Value = "Price";
+            worksheet.Cell(1, 6).Value = "Director";
+            worksheet.Cell(1, 7).Value = "Image URL";
+
+            // Data
+            for (int i = 0; i < movies.Count; i++)
+            {
+                var m = movies[i];
+                worksheet.Cell(i + 2, 1).Value = m.Title;
+                worksheet.Cell(i + 2, 2).Value = m.Genre;
+                worksheet.Cell(i + 2, 3).Value = m.ReleaseDate.ToShortDateString();
+                worksheet.Cell(i + 2, 4).Value = m.Duration;
+                worksheet.Cell(i + 2, 5).Value = m.Price;
+                worksheet.Cell(i + 2, 6).Value = m.Director?.Name ?? "";
+                worksheet.Cell(i + 2, 7).Value = m.ImageUrl ?? "";
+            }
+
+            using var stream = new MemoryStream();
+            workbook.SaveAs(stream);
+            stream.Seek(0, SeekOrigin.Begin);
+
+            return File(stream.ToArray(),
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                "Movies.xlsx");
+        }
+
 
         // POST: /Movie/Edit
         [HttpPost]
@@ -204,7 +280,6 @@ namespace MovieBookingSystem.Controllers
             movie.DirectorId = vm.SelectedDirectorId;
             movie.ImageUrl = vm.ImageUrl;
 
-            
             movie.MovieActors.Clear();
             foreach (var actorId in vm.SelectedActorIds)
             {
