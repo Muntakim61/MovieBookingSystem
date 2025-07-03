@@ -1,6 +1,58 @@
 ﻿@{
     ViewData["Title"] = "Privacy Policy";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<h1>@ViewData["Title"]</h1>
 
-<p>Use this page to detail your site's privacy policy.</p>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-10 col-lg-8">
+            <div class="card shadow rounded-4 border-0">
+                <div class="card-body p-4">
+                    <h2 class="card-title text-center mb-4">@ViewData["Title"]</h2>
+                    <p class="text-muted">
+                        This privacy policy outlines how MovieBookingSystem collects, uses, and protects your personal information.
+                    </p>
+
+                    <h5 class="mt-4">1. Information We Collect</h5>
+                    <ul>
+                        <li>Your name and email address when you register</li>
+                        <li>Booking history and selected movies</li>
+                        <li>Browser cookies for login sessions</li>
+                    </ul>
+
+                    <h5 class="mt-4">2. How We Use Your Information</h5>
+                    <ul>
+                        <li>To manage your bookings and profile</li>
+                        <li>To improve movie recommendations</li>
+                        <li>To enhance user experience and system security</li>
+                    </ul>
+
+                    <h5 class="mt-4">3. Data Security</h5>
+                    <p>
+                        We implement industry-standard practices to protect your data from unauthorized access or disclosure.
+                    </p>
+
+                    <h5 class="mt-4">4. Third-Party Access</h5>
+                    <p>
+                        Your personal data is not shared with third parties except as required by law or for system functionality (e.g., payment processors).
+                    </p>
+
+                    <h5 class="mt-4">5. User Rights</h5>
+                    <ul>
+                        <li>You may view, edit, or delete your account information at any time.</li>
+                        <li>You may request data export or account removal via email.</li>
+                    </ul>
+
+                    <h5 class="mt-4">6. Changes to This Policy</h5>
+                    <p>
+                        We may update this policy occasionally. Changes will be posted on this page.
+                    </p>
+
+                    <p class="mt-4 text-muted">
+                        For any questions or concerns, please contact our support team.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
