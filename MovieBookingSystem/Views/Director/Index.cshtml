@@ -5,9 +5,10 @@
 
 <h2>Directors</h2>
 
-<p>
-    <a class="btn btn-primary" href="/Director/Create">Create New Director</a>
-</p>
+<div class="d-flex justify-content-between mb-3">
+    <a asp-action="Create" class="btn btn-primary">Create Director Movie</a>
+    <a class="btn btn-success" href="/Director/DownloadExcel">Download Director list (Excel)</a>
+</div>
 
 <link href="https://unpkg.com/tabulator-tables@5.4.3/dist/css/tabulator.min.css" rel="stylesheet" />
 <script src="https://unpkg.com/tabulator-tables@5.4.3/dist/js/tabulator.min.js"></script>

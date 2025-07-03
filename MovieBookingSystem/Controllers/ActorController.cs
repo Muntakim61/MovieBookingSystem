@@ -119,7 +119,43 @@ namespace MovieBookingSystem.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-      
+
+
+        [HttpGet]
+        public async Task<IActionResult> DownloadExcel()
+        {
+            var actors = await _context.Actors.ToListAsync();
+
+            using var workbook = new ClosedXML.Excel.XLWorkbook();
+            var worksheet = workbook.Worksheets.Add("Actors");
+
+            // Header
+            worksheet.Cell(1, 1).Value = "Name";
+            worksheet.Cell(1, 2).Value = "Biography";
+            worksheet.Cell(1, 3).Value = "Date of Birth";
+            worksheet.Cell(1, 4).Value = "Image URL";
+
+            // Data
+            for (int i = 0; i < actors.Count; i++)
+            {
+                var a = actors[i];
+                worksheet.Cell(i + 2, 1).Value = a.Name;
+                worksheet.Cell(i + 2, 2).Value = a.Biography;
+                worksheet.Cell(i + 2, 3).Value = a.DateOfBirth.ToString("yyyy-MM-dd");
+                worksheet.Cell(i + 2, 4).Value = a.ImageUrl ?? "";
+            }
+
+            using var stream = new MemoryStream();
+            workbook.SaveAs(stream);
+            stream.Seek(0, SeekOrigin.Begin);
+
+            return File(stream.ToArray(),
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                "Actors.xlsx");
+        }
+
+
+
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)

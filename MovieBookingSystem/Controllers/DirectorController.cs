@@ -167,6 +167,41 @@ namespace MovieBookingSystem.Controllers
         }
 
 
+        [HttpGet]
+        public async Task<IActionResult> DownloadExcel()
+        {
+            var directors = await _context.Directors.ToListAsync();
+
+            using var workbook = new ClosedXML.Excel.XLWorkbook();
+            var worksheet = workbook.Worksheets.Add("Directors");
+
+            // Header
+            worksheet.Cell(1, 1).Value = "Name";
+            worksheet.Cell(1, 2).Value = "Biography";
+            worksheet.Cell(1, 3).Value = "Date of Birth";
+            worksheet.Cell(1, 4).Value = "Image URL";
+
+            // Data
+            for (int i = 0; i < directors.Count; i++)
+            {
+                var d = directors[i];
+                worksheet.Cell(i + 2, 1).Value = d.Name;
+                worksheet.Cell(i + 2, 2).Value = d.Biography;
+                worksheet.Cell(i + 2, 3).Value = d.DateOfBirth.ToString("yyyy-MM-dd");
+                worksheet.Cell(i + 2, 4).Value = d.ImageUrl ?? "";
+            }
+
+            using var stream = new MemoryStream();
+            workbook.SaveAs(stream);
+            stream.Seek(0, SeekOrigin.Begin);
+
+            return File(stream.ToArray(),
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                "Directors.xlsx");
+        }
+
+
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("DirectorId,Name,Biography,DateOfBirth,ImageUrl")] Director director)

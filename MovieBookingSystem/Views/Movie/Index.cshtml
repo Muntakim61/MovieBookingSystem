@@ -1,7 +1,10 @@
-﻿@{
+﻿@model IEnumerable<MovieBookingSystem.Models.Movie>
+
+@{
     ViewData["Title"] = "Movies";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+<<<<<<< HEAD
 <h2 class="flex-row align-content-center">Movie</h2>
 <p>
     <a class="btn btn-primary" href="/Movie/Create">Create New Movie</a>
@@ -64,6 +67,74 @@
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(rowData)
             });
+=======
+
+<h2>Movie List</h2>
+
+<div class="d-flex justify-content-between mb-3">
+    <a asp-action="Create" class="btn btn-primary">Create New Movie</a>
+    <a class="btn btn-success" href="/Movie/DownloadExcel">Download Movie list (Excel)</a>
+</div>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Genre</th>
+            <th>Release Date</th>
+            <th>Duration</th>
+            <th>Price</th>
+            <th>Director</th>
+            <th>Image</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var movie in Model)
+        {
+            <tr>
+                <td>@movie.Title</td>
+                <td>@movie.Genre</td>
+                <td>@movie.ReleaseDate.ToShortDateString()</td>
+                <td>@movie.Duration</td>
+                <td>@movie.Price</td>
+                <td>@movie.Director?.Name</td>
+                <td>
+                    @if (!string.IsNullOrEmpty(movie.ImageUrl))
+                    {
+                        <img src="@movie.ImageUrl" alt="Movie Image" style="height: 60px; border-radius: 5px;" />
+                    }
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@movie.MovieId" class="btn btn-sm btn-warning">Edit</a>
+                    <button class="btn btn-sm btn-danger" onclick="deleteMovie(@movie.MovieId)">Delete</button>
+                </td>
+            </tr>
+>>>>>>> origin/ExcelFeatures
         }
-    });
-</script>
+    </tbody>
+</table>
+
+@section Scripts {
+    <script>
+        function deleteMovie(id) {
+            if (confirm("Are you sure you want to delete this movie?")) {
+                fetch("/Movie/DeleteMovie", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(id)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        location.reload();
+                    } else {
+                        alert("Failed to delete movie.");
+                    }
+                });
+            }
+        }
+    </script>
+}
