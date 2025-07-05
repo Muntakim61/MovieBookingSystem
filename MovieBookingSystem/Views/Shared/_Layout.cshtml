@@ -231,11 +231,39 @@
                         @if (User.IsInRole("User"))
                         {
                             <li class="nav-item">
-                                <a class="nav-link" asp-controller="" asp-action="UserDashboard">
-                                    @(!string.IsNullOrWhiteSpace(ViewData["FullName"] as string)
-                                      ? ViewData["FullName"]: "User")
-                            </a>
-                        </li>
+                                <a class="nav-link" asp-controller="User" asp-action="Dashboard">
+                                    @(
+                                    !string.IsNullOrWhiteSpace(ViewData["FullName"] as string)
+                                                        ? ViewData["FullName"] : "User"
+                                    )
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Movie" asp-action="GetAllMovies">Movies</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Booking" asp-action="UserBookings">My Bookings</a>
+                            </li>
+                            <li class="nav-item">
+                                <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
+                                    <button type="submit" class="btn btn-link nav-link p-0 m-0 align-baseline">Logout</button>
+                                </form>
+                            </li>
+                        }
+                        @if (!(User.Identity?.IsAuthenticated ?? false))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Home" asp-action="Index">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Movie" asp-action="GetAllMovies">Movies</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Account" asp-action="Login">Login</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Account" asp-action="Register">Register</a>
+                            </li>
                         }
                         <partial name="_LoginPartial" />
                     </ul>
@@ -248,25 +276,25 @@
         @if (User.IsInRole("Admin"))
         {
             <nav id="sidebar" class="sidebar bg-dark text-white p-3 sidebar-expanded">
-                <div class="d-flex justify-content-end mb-3">
+                <div class="d-flex justify-content-center mb-3">
                     <button class="btn btn-outline-light" id="toggleSidebar">
                         <span id="toggleIcon">✖</span>
                     </button>
                 </div>
 
-                <h5 class="mb-4 pacifico-regular-2 text-white">Dashboard</h5>
-                <ul class="nav flex-column navbar-nav">
+                <h5 class="mb-4 pacifico-regular-2 text-white text-center">Sidebar</h5>
+                <ul class="nav flex-column align-content-center navbar-nav">
                     <li class="nav-item mb-2">
-                        <a class="nav-link2 text-white" asp-controller="Movie" asp-action="Index">Movies</a>
+                        <a class="nav-link2 text-white text-center" asp-controller="Movie" asp-action="Index">Movies</a>
                     </li>
                     <li class="nav-item mb-2">
-                        <a class="nav-link2 text-white" asp-controller="Hall" asp-action="Index">Halls</a>
+                        <a class="nav-link2 text-white text-center" asp-controller="Hall" asp-action="Index">Halls</a>
                     </li>
                     <li class="nav-item mb-2">
-                        <a class="nav-link2 text-white" asp-controller="Actor" asp-action="Index">Actors</a>
+                        <a class="nav-link2 text-white text-center" asp-controller="Actor" asp-action="Index">Actors</a>
                     </li>
                     <li class="nav-item mb-2">
-                        <a class="nav-link2 text-white" asp-controller="Director" asp-action="Index">Directors</a>
+                        <a class="nav-link2 text-white text-center" asp-controller="Director" asp-action="Index">Directors</a>
                     </li>
                 </ul>
             </nav>

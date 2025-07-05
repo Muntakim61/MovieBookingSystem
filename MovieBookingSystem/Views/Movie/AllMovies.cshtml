@@ -1,0 +1,46 @@
+﻿@* @model IEnumerable<MovieBookingSystem.Models.Movie> *@
+@model List<MovieBookingSystem.Models.Movie>
+@{
+    ViewData["Title"] = "All Movies";
+}
+
+<section class="all-movies-section py-5" style="background-color: #121212; min-height: 100vh;">
+    <div class="container">
+        <h2 class="text-center text-warning mb-5" style="font-family: 'Cinzel', serif; letter-spacing: 2px;">
+            🎬 All Movies
+        </h2>
+
+        <div class="row g-4">
+            @foreach (var movie in Model)
+            {
+                <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                    <div class="card movie-card h-100 border-0 text-white shadow" style="background-color: #1f1f1f; border-radius: 15px; overflow: hidden; transition: transform 0.3s ease, box-shadow 0.3s ease;">
+                        <img src="@movie.ImageUrl" alt="@movie.Title" class="card-img-top" style="height: 280px; object-fit: cover; filter: brightness(0.85); transition: transform 0.4s ease;">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title fw-semibold mb-1">@movie.Title (@movie.ReleaseDate.Year)</h5>
+                            <p class="card-text text-secondary mb-2" style="font-size: 0.9rem;">@movie.Genre</p>
+                            <p class="card-text text-warning mb-3" style="font-weight: 600;">Price: $@movie.Price</p>
+                            <a asp-controller="Movie" asp-action="Details" asp-route-id="@movie.MovieId" class="btn btn-warning mt-auto rounded-pill shadow-sm">
+                                View Details
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
+<style>
+    .movie-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 10px 25px rgba(255, 193, 7, 0.6);
+        cursor: pointer;
+    }
+
+        .movie-card:hover img {
+            transform: scale(1.05);
+            filter: brightness(1);
+        }
+    }
+</style>

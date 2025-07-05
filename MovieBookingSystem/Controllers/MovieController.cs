@@ -22,16 +22,19 @@ namespace MovieBookingSystem.Controllers
             _context = context;
         }
 
-<<<<<<< HEAD
+
         [Authorize(Roles = "Admin")]
-        public IActionResult Index()
-=======
-        // ✅ UPDATED to send movie list to Index view
         public async Task<IActionResult> Index()
->>>>>>> origin/ExcelFeatures
+
         {
             var movies = await _context.Movies.Include(m => m.Director).ToListAsync();
             return View(movies);
+        }
+
+        public async Task<IActionResult> GetAllMovies(string query)
+        {
+            var movies = await _context.Movies.Include(m => m.Director).ToListAsync();
+            return View("AllMovies", movies);
         }
 
         [Authorize(Roles = "Admin")]
@@ -179,7 +182,7 @@ namespace MovieBookingSystem.Controllers
         }
 
         [HttpGet]
-<<<<<<< HEAD
+
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -198,8 +201,6 @@ namespace MovieBookingSystem.Controllers
         }
 
         [Authorize(Roles = "Admin")]
-=======
->>>>>>> origin/ExcelFeatures
         [HttpGet]
         public async Task<IActionResult> Edit(int? id)
         {
@@ -241,14 +242,7 @@ namespace MovieBookingSystem.Controllers
             return View(vm);
         }
 
-<<<<<<< HEAD
         [Authorize(Roles = "Admin")]
-=======
-
-
-
-        // POST: /Movie/DeleteMovie
->>>>>>> origin/ExcelFeatures
         [HttpPost]
         public async Task<IActionResult> DeleteMovie([FromBody] int id)
         {
@@ -266,10 +260,7 @@ namespace MovieBookingSystem.Controllers
             return Json(new { success = true });
         }
 
-<<<<<<< HEAD
         [Authorize(Roles = "Admin")]
-=======
-        // GET: /Movie/DownloadExcel
         [HttpGet]
         public async Task<IActionResult> DownloadExcel()
         {
@@ -315,9 +306,6 @@ namespace MovieBookingSystem.Controllers
 
 
         // POST: /Movie/Edit
->>>>>>> origin/ExcelFeatures
-        [HttpPost]
-        [ValidateAntiForgeryToken]
         public ActionResult Edit(MovieEditViewModel vm)
         {
             if (!ModelState.IsValid)

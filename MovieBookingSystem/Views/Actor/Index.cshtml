@@ -36,9 +36,9 @@
         },
         columns: [
             { title: "ID", field: "actorId", visible: false },
-            { title: "Name", field: "name", editor: "input" },
-            { title: "Biography", field: "biography", editor: "input" },
-            { title: "Date of Birth", field: "dateOfBirth", editor: "input" },
+            { title: "Name", field: "name", editor: "input" , sorter: "string", headerFilter: "input"},
+            { title: "Biography", field: "biography", editor: "input" , sorter: "string", headerFilter: "input"},
+            { title: "Date of Birth", field: "dateOfBirth", editor: "input" , sorter: "string", headerFilter: "input" },
             {
                 title: "Image",
                 field: "imageUrl",
@@ -57,7 +57,8 @@
                     `;
                 },
                 width: 180,
-                hozAlign: "center"
+                hozAlign: "center",
+                headerSort: false
             }
         ]
     });

@@ -32,9 +32,9 @@
         },
         columns: [
             { title: "ID", field: "directorId", visible: false },
-            { title: "Name", field: "name", editor: "input" },
-            { title: "Biography", field: "biography", editor: "input" },
-            { title: "Date of Birth", field: "dateOfBirth", editor: "input" },
+            { title: "Name", field: "name", editor: "input" , sorter: "string", headerFilter: "input"},
+            { title: "Biography", field: "biography", editor: "input" , sorter: "string", headerFilter: "input"},
+            { title: "Date of Birth", field: "dateOfBirth", editor: "input" , sorter: "string", headerFilter: "input"},
             {
                 title: "Image",
                 field: "imageUrl",
@@ -54,6 +54,7 @@
         },
         width: 180,
         hozAlign: "center",
+        headerSort: false,
         cellClick: function(e, cell) {
             const rowData = cell.getRow().getData();
             const id = rowData.directorId;

@@ -23,7 +23,6 @@ namespace MovieBookingSystem.Controllers
         }
 
         [HttpGet]
-        [HttpGet]
         public async Task<IActionResult> GetHalls(int page = 1, int size = 10)
         {
             using var connection = _context.Database.GetDbConnection();
@@ -65,11 +64,15 @@ namespace MovieBookingSystem.Controllers
                 totalCount = reader.GetInt32(0);
             }
 
-            return Json(new
+            int totalPages = (int)Math.Ceiling((double)totalCount / size);
+
+            return new JsonResult(new
             {
                 data = halls,
-                last_page = (int)Math.Ceiling((double)totalCount / size)
+                last_page = totalPages,
+                total_count = totalCount
             });
+
         }
 
 

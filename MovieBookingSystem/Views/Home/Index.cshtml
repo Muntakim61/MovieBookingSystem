@@ -1,7 +1,8 @@
-﻿﻿@{
+﻿@model List<MovieBookingSystem.Models.Movie>
+@using System.Linq
+@{
     ViewData["Title"] = "Home Page";
 }
-
 @{
     var isAdmin = User.IsInRole("Admin");
     var isUser = User.IsInRole("User");
@@ -46,7 +47,7 @@
             Popular Movies
         </h2>
         <div class="row g-4 py-4">
-            @foreach (var movie in Model)
+            @foreach (var movie in Model.Take(6))
             {
                 <div class="col-sm-12 col-md-6 col-lg-4" data-aos="zoom-in">
                     <div class="card h-100 border-0 text-white " style="background-color: #1c1c1e; border-radius: 15px; overflow: hidden;">

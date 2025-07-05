@@ -11,62 +11,70 @@
     <a class="btn btn-success" href="/Hall/DownloadExcel">Download Hall list (Excel)</a>
 </div>
 
-<link href="https://unpkg.com/tabulator-tables@5.4.3/dist/css/tabulator.min.css" rel="stylesheet" />
-<script src="https://unpkg.com/tabulator-tables@5.4.3/dist/js/tabulator.min.js"></script>
+<link href="https://unpkg.com/tabulator-tables@5.5.0/dist/css/tabulator.min.css" rel="stylesheet" />
+<script src="https://unpkg.com/tabulator-tables@5.5.0/dist/js/tabulator.min.js"></script>
+
 
 <div id="hall-table"></div>
 
 <script>
-    var table = new Tabulator("#hall-table", {
-        height: 500,
-        layout: "fitColumns",
-        ajaxURL: "/Hall/GetHalls",
-        pagination: "remote",
-        paginationSize: 10,
-        ajaxConfig: "GET",
-            ajaxResponse: function(url, params, response) {
-            return response.data;
-        },
-        paginationDataReceived: {
-            last_page: "last_page",
-            data: "data"
-        },
-        columns: [
-            { title: "ID", field: "hallId", visible: false },
-            { title: "Name", field: "name", editor: "input" },
-            { title: "Location", field: "location", editor: "input" },
-            { title: "Capacity", field: "capacity", editor: "input" },
-            {
-                title: "Actions",
-                formatter: function(cell) {
-                    var data = cell.getRow().getData();
-                    return `
-                        <button class="btn btn-sm btn-warning me-1 action-edit" data-id="${data.hallId}">Edit</button>
-                        <button class="btn btn-sm btn-danger action-delete" data-id="${data.hallId}">Delete</button>
-                    `;
-                },
-                width: 180,
-                hozAlign: "center"
+    var table;
+    document.addEventListener('DOMContentLoaded', function () {
+        table = new Tabulator("#hall-table", {
+            height: 500,
+            layout: "fitColumns",
+            ajaxURL: "/Hall/GetHalls",
+            ajaxConfig: "GET",
+            pagination: "remote",
+            paginationSize: 10,
+            paginationButtonCount: 5,
+            paginationDataReceived: {
+                last_page: "last_page",
+                total_count: "total_count"
+            },
+            ajaxResponse: function (url, params, response) {
+                console.log("Response received : ", response);
+                return response.data;
+            },
+            columns: [
+                { title: "ID", field: "hallId", visible: false },
+                { title: "Name", field: "name", editor: "input", sorter: "string", headerFilter: "input" },
+                { title: "Location", field: "location", editor: "input", sorter: "string", headerFilter: "input" },
+                { title: "Capacity", field: "capacity", editor: "input", sorter: "string", headerFilter: "input" },
+                {
+                    title: "Actions",
+                    formatter: function (cell) {
+                        var data = cell.getRow().getData();
+                        return `
+                            <button class="btn btn-sm btn-warning me-1 action-edit" data-id="${data.hallId}">Edit</button>
+                            <button class="btn btn-sm btn-danger action-delete" data-id="${data.hallId}">Delete</button>
+                        `;
+                    },
+                    width: 180,
+                    hozAlign: "center",
+                    headerSort: false
+                }
+            ]
+        });
+
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('action-edit')) {
+                const id = e.target.getAttribute('data-id');
+                window.location.href = '/Hall/Edit/' + id;
+            } else if (e.target.classList.contains('action-delete')) {
+                const id = e.target.getAttribute('data-id');
+                window.location.href = '/Hall/Delete/' + id;
             }
-        ]
-    });
+        });
 
-    document.addEventListener('click', function(e) {
-        if (e.target.classList.contains('action-edit')) {
-            const id = e.target.getAttribute('data-id');
-            window.location.href = '/Hall/Edit/' + id;
-        } else if (e.target.classList.contains('action-delete')) {
-            const id = e.target.getAttribute('data-id');
-            window.location.href = '/Hall/Delete/' + id;
-        }
-    });
-
-    table.on("cellEdited", function(cell) {
-        let rowData = cell.getRow().getData();
-        fetch("/Hall/Edit/" + rowData.hallId, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(rowData)
+        table.on("cellEdited", function(cell) {
+            let rowData = cell.getRow().getData();
+            fetch("/Hall/Edit/" + rowData.hallId, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(rowData)
+            });
         });
     });
 </script>
+
