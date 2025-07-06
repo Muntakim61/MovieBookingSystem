@@ -24,7 +24,7 @@ namespace MovieBookingSystem.Controllers
             _bookingService = bookingService;
             _logger = logger;
         }
-
+        [Authorize(Roles = "User")]
         // GET: Booking/Create
         [HttpGet]
         public async Task<IActionResult> Create(int? movieId)
@@ -38,6 +38,7 @@ namespace MovieBookingSystem.Controllers
             return View();
         }
 
+        [Authorize(Roles = "User")]
         // POST: Booking/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -87,7 +88,7 @@ namespace MovieBookingSystem.Controllers
             return View(bookings);
         }
 
-        // GET: Booking/AdminPending  <-- Add this missing method
+        // GET: Booking/AdminPending
         [Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<IActionResult> AdminPending()

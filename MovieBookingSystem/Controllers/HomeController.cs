@@ -46,9 +46,6 @@ namespace MovieBookingSystem.Controllers
 
             return View(movies);
         }
-
-
-        [Authorize]
         public IActionResult Privacy()
         {
             return View();
