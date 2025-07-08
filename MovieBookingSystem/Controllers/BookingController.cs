@@ -25,7 +25,6 @@ namespace MovieBookingSystem.Controllers
             _logger = logger;
         }
         [Authorize(Roles = "User")]
-        // GET: Booking/Create
         [HttpGet]
         public async Task<IActionResult> Create(int? movieId)
         {
